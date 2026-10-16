@@ -19,7 +19,7 @@ CatFood/
 │   └── catfood.sql              # 数据库建表脚本 + 测试数据
 ├── src/
 │   └── com/catfood/
-│       ├── model/               # JavaBean 实体层
+│       ├── javabean/               # JavaBean 实体层
 │       │   ├── User.java        # 用户
 │       │   ├── Product.java     # 商品（猫粮）
 │       │   ├── Order.java       # 订单
@@ -42,12 +42,12 @@ CatFood/
 │           ├── OrderServlet.java        # 订单
 │           ├── AdminProductServlet.java # 后台商品管理
 │           └── AdminOrderServlet.java   # 后台订单管理
-└── WebContent/
+└── Webapp/
     ├── WEB-INF/
     │   ├── web.xml              # 部署描述符
-    │   └── lib/                # 放 MySQL 驱动 jar
-    ├── css/style.css           # 公共样式
-    ├── js/main.js              # 公共 JS
+    │   └── lib/                 # 放 MySQL 驱动 jar
+    ├── css/*.css                # 公共样式
+    ├── js/*.js                  # 公共 JS
     ├── index.jsp                # 首页（重定向到商品列表）
     ├── login.jsp                # 登录页
     ├── register.jsp             # 注册页
@@ -61,7 +61,7 @@ CatFood/
         ├── product_edit.jsp      # 后台商品新增/编辑
         ├── order_list.jsp        # 后台订单列表
         └── order_detail.jsp      # 后台订单详情
-```
+``````````````````````````
 
 ## 核心功能
 
