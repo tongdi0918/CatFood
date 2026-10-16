@@ -1,0 +1,12 @@
+.card{
+    font-size: 20px;
+}
+.btn-default{
+    background-color: aqua;
+}
+.btn-primary{
+    background-color: coral;
+}
+.btn-danger{
+    background-color: darkkhaki;
+}
