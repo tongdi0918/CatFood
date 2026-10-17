@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>我的购物车 - 喵鲜猫粮商城</title>
 </head>
-<body>
+<body data-context-path="${pageContext.request.contextPath}">
 
 <nav>
     <strong class="logo">喵鲜猫粮商城</strong>
@@ -46,14 +46,18 @@
                     </thead>
                     <tbody>
                         <c:forEach items="${sessionScope.cart}" var="item">
-                            <tr>
+                            <tr data-pid="${item.product.pid}" data-stock="${item.product.stock}">
                                 <td>
                                     <img src="${pageContext.request.contextPath}${item.product.image}" alt="${item.product.pname}">
                                     <span>${item.product.pname}</span>
                                 </td>
                                 <td>¥ <fmt:formatNumber value="${item.product.price}" pattern="0.00"/></td>
-                                <td>${item.quantity}</td>
-                                <td>¥ <fmt:formatNumber value="${item.subtotal}" pattern="0.00"/></td>
+                                <td class="cart-qty">
+                                    <button type="button" class="qty-minus">-</button>
+                                    <span class="qty-value">${item.quantity}</span>
+                                    <button type="button" class="qty-plus">+</button>
+                                </td>
+                                <td class="qty-subtotal">¥ <fmt:formatNumber value="${item.subtotal}" pattern="0.00"/></td>
                                 <td>暂未开放</td>
                             </tr>
                         </c:forEach>
@@ -61,7 +65,7 @@
                 </table>
                 <div class="cart-total">
                     <span>合计：</span>
-                    <span>¥ <fmt:formatNumber value="${totalAmount}" pattern="0.00"/></span>
+                    <span id="cart-total">¥ <fmt:formatNumber value="${totalAmount}" pattern="0.00"/></span>
                 </div>
             </c:otherwise>
         </c:choose>
@@ -72,5 +76,6 @@
     <p>©2026 喵鲜猫粮商城 | 第三小组课程项目 版权所有</p>
 </footer>
 
+<script src="${pageContext.request.contextPath}/js/cart.js"></script>
 </body>
 </html>
