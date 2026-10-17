@@ -1,0 +1,180 @@
+/* 全局重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", system-ui, sans-serif;
+}
+
+body {
+    background-color: #fffaf5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* ========== nav导航栏 ========== */
+nav {
+    background-color: #d2691e;
+    padding: 16px 60px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+nav .logo{
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+}
+nav .nav-links a{
+    color: #fff;
+    text-decoration: none;
+    margin-left:24px;
+    font-size:16px;
+    transition: 0.2s;
+}
+nav .nav-links a:hover{
+    color: #ffe8d4;
+}
+
+/* ========== header头部 ========== */
+header {
+    padding:40px 60px 20px;
+}
+header h1{
+    color: #d2691e;
+    font-size:42px;
+    letter-spacing:2px;
+    margin-bottom:8px;
+}
+header p{
+    color:#777;
+    font-size:17px;
+}
+
+/* ========== main主体区域 ========== */
+main{
+    padding:0 60px 40px;
+}
+/* 搜索筛选模块 */
+.search-section{
+    background:#ffffff;
+    padding:22px 26px;
+    border-radius:14px;
+    box-shadow:0 3px 12px rgba(210,105,30,0.12);
+    margin-bottom:35px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+.search-section label{
+    font-size:17px;
+    color:#555;
+}
+.search-section select,
+.search-section input{
+    font-size:16px;
+    padding:9px 12px;
+    border:1px solid #ddc9b3;
+    border-radius:8px;
+    outline:none;
+}
+.search-section select:focus,
+.search-section input:focus{
+    border-color:#d2691e;
+}
+.search-section button{
+    padding:9px 24px;
+    background-color:#d2691e;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+.search-section button:hover{
+    background-color:#b85c1a;
+}
+
+/* 商品卡片容器 */
+.product-wrap{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:32px;
+}
+/* article代替div做商品卡片 */
+.product-card{
+    background:#fff;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 4px 16px rgba(210,105,30,0.14);
+    border:1px solid #f4eade;
+    transition: all 0.3s ease;
+}
+.product-card:hover{
+    transform: translateY(-10px);
+    box-shadow:0 12px 28px rgba(210,105,30,0.24);
+}
+/* figure图片容器 */
+.card-img{
+    width:100%;
+    height:270px;
+    overflow:hidden;
+}
+.card-img img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:0.4s;
+}
+.product-card:hover .card-img img{
+    transform: scale(1.06);
+}
+.card-body{
+    padding:22px;
+}
+.card-name{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:12px;
+    color:#222;
+}
+.card-price{
+    font-size:24px;
+    color:#e53e39;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+.card-category{
+    font-size:16px;
+    color:#707070;
+    margin-bottom:20px;
+}
+.card-detail a{
+    display:inline-block;
+    padding:10px 22px;
+    background-color:#f9eade;
+    color:#d2691e;
+    text-decoration:none;
+    border-radius:9px;
+    font-weight:500;
+    transition:0.3s;
+}
+.card-detail a:hover{
+    background-color:#d2691e;
+    color:#ffffff;
+}
+
+/* ========== footer页脚 ========== */
+footer{
+    background-color:#443428;
+    color:#fff;
+    text-align:center;
+    padding:30px;
+    margin-top:40px;
+}
+footer p{
+    font-size:15px;
+    opacity:0.8;
+}
