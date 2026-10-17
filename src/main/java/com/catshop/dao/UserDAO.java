@@ -45,9 +45,11 @@ public class UserDAO {
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             int count = pstmt.executeUpdate();
+            System.out.println("影响行数count="+count);
             return count > 0;
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("注册数据库异常！");
             return false;
         } finally {
             DBUtil.close(conn, pstmt);

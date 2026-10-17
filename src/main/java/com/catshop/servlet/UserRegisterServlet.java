@@ -14,15 +14,17 @@ public class UserRegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        System.out.println("收到注册：username="+username + " password="+password);
 
         UserDAO userDAO = new UserDAO();
         boolean result = userDAO.register(username, password);
+        System.out.println("注册结果result = "+result);
 
         if (result) {
-            //注册成功跳转到登录页面
+            //注册成功跳登录页
             response.sendRedirect("login.jsp");
         } else {
-            //注册失败留在注册页面
+            //注册失败，回到注册页
             response.sendRedirect("register.jsp");
         }
     }
