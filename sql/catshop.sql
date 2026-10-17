@@ -32,8 +32,14 @@ CREATE TABLE `product`  (
 -- ----------------------------
 -- Records of product
 -- ----------------------------
-INSERT INTO `product` VALUES (1, '幼猫奶糕猫粮', 119, '幼猫', 120, 'img/ym.jpg', '适合2‑12月幼猫，高奶蛋白', 1);
-INSERT INTO `product` VALUES (2, '全期无谷猫粮', 139, '全期', 80, 'img/qjqg.jpg', '成幼猫通用，无谷配方', 1);
-INSERT INTO `product` VALUES (3, '成猫减脂猫粮', 109, '成猫', 95, 'img/cmjz.jpg', '控制体重，低脂配方', 1);
-
+INSERT INTO product(pid,pname,price,category,stock,image,description,status) VALUES
+                            (1,'幼猫奶糕猫粮',119.0,'幼猫',50,'/images/kitten_milk_cake.jpg','适合1‑4月龄幼猫，奶糕配方，好消化，助力幼猫发育。',1),
+                            (2,'全期无谷鲜肉猫粮',218.0,'全期',22,'/images/all_stage_grain_free_fresh_meat.jpg','无谷配方，高肉含量，幼猫成猫通用，易消化吸收。',1),
+                            (3,'成猫减脂猫粮',109.0,'成猫',95,'/images/adult_cat_fat_loss.jpg','专为室内易胖成猫调配，低脂高蛋白，帮助温和控制体重，守护猫咪健康体态。',1),
+                            (4,'幼猫冻干双拼猫粮',179.0,'幼猫',28,'/images/kitten_freezed_dry_mix.jpg','添加鸡肉冻干，高蛋白，满足幼猫生长需求。',1),
+                            (5,'成猫美毛猫粮',145.0,'成猫',40,'/images/adult_cat_beauty_fur.jpg','添加鱼油，滋养毛发，减少掉毛，呵护皮肤。',1),
+                            (6,'全期低脂猫粮',132.0,'全期',16,'/images/all_stage_low_fat.jpg','低脂配方，适合易肥胖猫咪，保护胰腺健康。',1),
+                            (7,'老年成猫专用粮',168.0,'成猫',12,'/images/senior_cat_special.jpg','7岁以上老年猫专用，呵护肾脏，易消化吸收。',1),
+                            (8,'幼猫试吃装猫粮',29.9,'幼猫',100,'/images/kitten_trial_pack.jpg','小包装试吃，方便猫咪换粮尝试，净含量200g。',1),
+                           (9,'成猫室内专用猫粮',156.0,'成猫',35,'/images/indoor_adult_cat.jpg','室内成猫专用，减少毛球，控制体重，保护泌尿系统健康。',1);
 SET FOREIGN_KEY_CHECKS = 1;
