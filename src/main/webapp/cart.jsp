@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,20 +26,41 @@
 
 <main>
     <section class="cart-container">
-        <table class="cart-table">
-            <thead>
-                <tr>
-                    <th>商品</th>
-                    <th>单价</th>
-                    <th>数量</th>
-                    <th>小计</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- 商品数据行将在下一阶段实现 -->
-            </tbody>
-        </table>
+        <c:choose>
+            <c:when test="${empty sessionScope.cart}">
+                <div class="cart-empty">
+                    <p>购物车还是空的</p>
+                    <a href="${pageContext.request.contextPath}/ProductListServlet">去逛逛</a>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>商品</th>
+                            <th>单价</th>
+                            <th>数量</th>
+                            <th>小计</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${sessionScope.cart}" var="item">
+                            <tr>
+                                <td>
+                                    <img src="${pageContext.request.contextPath}${item.product.image}" alt="${item.product.pname}">
+                                    <span>${item.product.pname}</span>
+                                </td>
+                                <td>¥ <fmt:formatNumber value="${item.product.price}" pattern="0.00"/></td>
+                                <td>${item.quantity}</td>
+                                <td>¥ <fmt:formatNumber value="${item.subtotal}" pattern="0.00"/></td>
+                                <td>暂未开放</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </c:otherwise>
+        </c:choose>
     </section>
 </main>
 
