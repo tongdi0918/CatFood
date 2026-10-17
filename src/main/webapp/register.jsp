@@ -7,17 +7,17 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<head>k
-    <title>用户登录</title>
+<head>
+    <title>用户注册</title>
 </head>
 <body>
-    <h2>用户登录</h2>
+    <h2>用户注册</h2>
     <form action="UserRegisterServlet" method="post">
         账号：<input type="text" name="username"><br><br>
         密码：<input type="password" name="password"><br><br>
-        <input type="submit" value="登录">
+        <input type="submit" value="注册">
     </form>
     <br>
-    <a href="register.jsp">没有账号？点击注册</a>
+    <a href="login.jsp">已有账号？返回登录</a>
 </body>
 </html>
