@@ -1,7 +1,10 @@
 package com.catshop.servlet;
 
+import com.catshop.dao.OrderDAO;
 import com.catshop.dao.ProductDAO;
 import com.catshop.javabean.CartItem;
+import com.catshop.javabean.OrderBean;
+import com.catshop.javabean.OrderItemBean;
 import com.catshop.javabean.Product;
 import com.catshop.javabean.UserBean;
 import jakarta.servlet.ServletException;
@@ -17,7 +20,7 @@ import java.util.List;
 
 /**
  * 购物车 Servlet
- * 支持 action: view（默认）/ update（修改数量）
+ * 支持 action: view（默认）/ update / remove / clear / submit
  */
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
@@ -61,6 +64,12 @@ public class CartServlet extends HttpServlet {
         // 清空购物车（AJAX）
         if ("clear".equals(action)) {
             clearCart(session, response);
+            return;
+        }
+
+        // 提交订单（表单提交，成功后重定向）
+        if ("submit".equals(action)) {
+            submitOrder(request, response, cart, loginUser);
             return;
         }
 
@@ -189,6 +198,106 @@ public class CartServlet extends HttpServlet {
         writeJson(response, "{\"code\":0,\"msg\":\"ok\",\"total\":0}");
     }
 
+    /**
+     * action=submit：结算下单，复用 OrderDAO.createOrder 的事务与扣库存逻辑
+     */
+    private void submitOrder(HttpServletRequest request, HttpServletResponse response, List<CartItem> cart, UserBean loginUser) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
+        if (cart.isEmpty()) {
+            request.setAttribute("error", "购物车为空，无法结算");
+            request.getRequestDispatcher("/cart.jsp").forward(request, response);
+            return;
+        }
+
+        // 收货信息校验
+        String receiver = trimToNull(request.getParameter("receiver"));
+        String phone = trimToNull(request.getParameter("phone"));
+        String address = trimToNull(request.getParameter("address"));
+        if (receiver == null || phone == null || address == null) {
+            echoForm(request, receiver, phone, address);
+            request.setAttribute("error", "收货人、联系电话、收货地址不能为空");
+            request.getRequestDispatcher("/cart.jsp").forward(request, response);
+            return;
+        }
+
+        // 会话级防重复下单（尽力而为；真正的幂等需数据库约束，超出购物车范围）
+        if (session.getAttribute("orderSubmitting") != null) {
+            echoForm(request, receiver, phone, address);
+            request.setAttribute("error", "订单正在提交，请勿重复操作");
+            request.getRequestDispatcher("/cart.jsp").forward(request, response);
+            return;
+        }
+        session.setAttribute("orderSubmitting", Boolean.TRUE);
+        try {
+            // 重新从数据库校验商品并组装订单明细（不信任客户端价格）
+            ProductDAO productDAO = new ProductDAO();
+            List<OrderItemBean> items = new ArrayList<OrderItemBean>();
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            for (CartItem ci : cart) {
+                Integer pid = ci.getProduct().getPid();
+                if (pid == null) {
+                    echoForm(request, receiver, phone, address);
+                    request.setAttribute("error", "购物车数据异常");
+                    request.getRequestDispatcher("/cart.jsp").forward(request, response);
+                    return;
+                }
+                Product p = productDAO.findById(pid);
+                if (p == null || p.getStatus() == null || p.getStatus() != 1) {
+                    echoForm(request, receiver, phone, address);
+                    request.setAttribute("error", "商品不存在或已下架，请返回购物车调整后重试");
+                    request.getRequestDispatcher("/cart.jsp").forward(request, response);
+                    return;
+                }
+                Double price = p.getPrice();
+                Integer stock = p.getStock();
+                if (price == null || stock == null) {
+                    echoForm(request, receiver, phone, address);
+                    request.setAttribute("error", "商品价格或库存异常");
+                    request.getRequestDispatcher("/cart.jsp").forward(request, response);
+                    return;
+                }
+                int quantity = ci.getQuantity();
+                if (quantity < 1 || quantity > stock) {
+                    echoForm(request, receiver, phone, address);
+                    request.setAttribute("error", "商品「" + p.getPname() + "」库存不足");
+                    request.getRequestDispatcher("/cart.jsp").forward(request, response);
+                    return;
+                }
+
+                OrderItemBean item = new OrderItemBean();
+                item.setProductId(pid);
+                item.setProductName(p.getPname());
+                item.setPrice(BigDecimal.valueOf(price));
+                item.setQuantity(quantity);
+                items.add(item);
+                totalAmount = totalAmount.add(BigDecimal.valueOf(price).multiply(BigDecimal.valueOf(quantity)));
+            }
+
+            // 组装订单主表
+            OrderBean order = new OrderBean();
+            order.setOrderNo(OrderDAO.generateOrderNo());
+            order.setUserId(loginUser.getId());
+            order.setTotalAmount(totalAmount);
+            order.setReceiver(receiver);
+            order.setPhone(phone);
+            order.setAddress(address);
+            order.setStatus(0); // 0-待付款
+
+            boolean ok = new OrderDAO().createOrder(order, items);
+            if (ok) {
+                session.removeAttribute("cart");
+                response.sendRedirect(request.getContextPath() + "/order_success.jsp");
+            } else {
+                echoForm(request, receiver, phone, address);
+                request.setAttribute("error", "下单失败：库存不足或系统异常，请重试");
+                request.getRequestDispatcher("/cart.jsp").forward(request, response);
+            }
+        } finally {
+            session.removeAttribute("orderSubmitting");
+        }
+    }
+
     /** 计算购物车总金额（BigDecimal 保证精度，价格为空则跳过） */
     private BigDecimal calcTotal(List<CartItem> cart) {
         BigDecimal total = BigDecimal.ZERO;
@@ -206,5 +315,17 @@ public class CartServlet extends HttpServlet {
     private void writeJson(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(json);
+    }
+
+    /** 去掉首尾空白，空串返回 null */
+    private String trimToNull(String s) {
+        return (s == null || s.trim().isEmpty()) ? null : s.trim();
+    }
+
+    /** 结算表单回显 */
+    private void echoForm(HttpServletRequest request, String receiver, String phone, String address) {
+        request.setAttribute("receiver", receiver);
+        request.setAttribute("phone", phone);
+        request.setAttribute("address", address);
     }
 }

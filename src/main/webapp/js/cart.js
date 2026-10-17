@@ -109,4 +109,17 @@
     if (clearBtn) {
         clearBtn.addEventListener('click', clearCart);
     }
+
+    // 提交订单：防止连续点击
+    var checkoutForm = document.getElementById('checkout-form');
+    var checkoutBtn = document.getElementById('checkout-submit');
+    if (checkoutForm && checkoutBtn) {
+        checkoutForm.addEventListener('submit', function (e) {
+            if (checkoutBtn.disabled) {
+                e.preventDefault(); // 已提交中，阻止重复提交
+                return;
+            }
+            checkoutBtn.disabled = true;
+        });
+    }
 })();

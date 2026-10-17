@@ -70,6 +70,27 @@
                 <div class="cart-actions">
                     <button type="button" id="cart-clear">清空购物车</button>
                 </div>
+                <c:if test="${not empty error}">
+                    <div class="cart-error">${error}</div>
+                </c:if>
+                <div class="cart-checkout">
+                    <form id="checkout-form" action="${pageContext.request.contextPath}/cart" method="post">
+                        <input type="hidden" name="action" value="submit">
+                        <p>
+                            <label>收货人：</label>
+                            <input type="text" name="receiver" value="${receiver}" required>
+                        </p>
+                        <p>
+                            <label>联系电话：</label>
+                            <input type="text" name="phone" value="${phone}" required>
+                        </p>
+                        <p>
+                            <label>收货地址：</label>
+                            <input type="text" name="address" value="${address}" required>
+                        </p>
+                        <button type="submit" id="checkout-submit">提交订单</button>
+                    </form>
+                </div>
             </c:otherwise>
         </c:choose>
     </section>
