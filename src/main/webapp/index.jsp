@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>喵鲜猫粮商城 - 首页</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/productDetail.css">
     <style>
         .banner{
             background: #d46b29;
@@ -71,12 +71,12 @@
 
 <section class="intro">
     <h2>商城介绍</h2>
-    <p>喵鲜猫粮商城是第三小组课程开发的线上猫粮电商平台。平台提供幼猫、成猫、全期多种猫粮选购，
+    <p>喵鲜猫粮商城是第三小组课程开发的线上猫粮电商平台。平台提供幼猫、成猫、全期多种猫粮选购</br>
         支持商品浏览、条件检索、查看商品详情。管理员后台可完成商品的新增、修改、删除、管理。</p>
 </section>
 
 <footer>
-    <p>©2026 喵鲜猫粮商城 | 第三小组课程项目 版权所有</p>
+    <p>&copy;202610 喵鲜猫粮商城 | 第三小组课程项目 版权所有</p>
 </footer>
 </body>
 </html>
