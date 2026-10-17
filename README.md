@@ -47,21 +47,20 @@ CatFood/
             │   ├── web.xml              # 部署描述符
             │   └── lib/                 # 放 MySQL 驱动 jar
             ├── css/*.css                # 公共样式
-            ├── js/*.js                  # 公共 JS
-            └──  page/
-                ├── index.jsp                # 首页（重定向到商品列表）
-                ├── login.jsp                # 登录页
-                ├── register.jsp             # 注册页
-                ├── product_list.jsp         # 商品列表（带分类筛选+搜索）
-                ├── product_detail.jsp       # 商品详情（AJAX 加购物车）
-                ├── cart.jsp                 # 购物车（AJAX 改数量）
-                ├── order_list.jsp           # 我的订单
-                ├── order_detail.jsp         # 订单详情
-                └── admin/
-                    ├── product_list.jsp     # 后台商品列表
-                    ├── product_edit.jsp      # 后台商品新增/编辑
-                    ├── order_list.jsp        # 后台订单列表
-                    └── order_detail.jsp      # 后台订单详情
+            ├── js/*.js                  # 公共 JS 
+            ├── index.jsp                # 首页（重定向到商品列表）
+            ├── login.jsp                # 登录页
+            ├── register.jsp             # 注册页
+            ├── product_list.jsp         # 商品列表（带分类筛选+搜索）
+            ├── product_detail.jsp       # 商品详情（AJAX 加购物车）
+            ├── cart.jsp                 # 购物车（AJAX 改数量）
+            ├── order_list.jsp           # 我的订单
+            ├── order_detail.jsp         # 订单详情
+            └── admin/
+                ├── product_list.jsp     # 后台商品列表
+                ├── product_edit.jsp      # 后台商品新增/编辑
+                ├── order_list.jsp        # 后台订单列表
+                └── order_detail.jsp      # 后台订单详情
 ``````````````````````````
 
 ## 核心功能

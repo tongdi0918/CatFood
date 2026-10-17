@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * 订单 Servlet
- * 支持 action: create / list / detail / pay / cancel
+ * 支持 action: create / list / detail / pay / cancel1
  */
 @WebServlet("/orders")
 public class orderServlet extends HttpServlet {

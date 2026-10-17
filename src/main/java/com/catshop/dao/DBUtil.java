@@ -9,9 +9,9 @@ import java.sql.SQLException;
 public class DBUtil {
     // 改成你自己数据库账号密码
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://localhost:3306/catshopdb?useSSL=false&serverTimezone=Asia/Shanghai";
+    private static final String URL = "jdbc:mysql://localhost:3306/catshop?useSSL=false&serverTimezone=Asia/Shanghai";
     private static final String USER = "root";
-    private static final String PWD = "你的数据库密码";
+    private static final String PWD = "mysql8";
 
     static {
         try {
