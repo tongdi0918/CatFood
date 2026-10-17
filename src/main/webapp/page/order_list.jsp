@@ -1,4 +1,4 @@
-<!  http://localhost:8080/catFood_war_exploded/page/order_list.jsp       />
+<%--    http://localhost:8080/catFood_war_exploded/page/order_list.jsp      --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
@@ -10,8 +10,7 @@
     <title>订单展示</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/order_list.css">
 </head>
-<body>
-
+<body class="bg">
 <h2 style="margin-bottom:20px;">我的订单</h2>
 <%
     List<OrderBean> orders = (List<OrderBean>) request.getAttribute("orders");
