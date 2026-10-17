@@ -52,6 +52,12 @@ public class CartServlet extends HttpServlet {
             return;
         }
 
+        // 移除商品（AJAX）
+        if ("remove".equals(action)) {
+            removeItem(request, response, cart);
+            return;
+        }
+
         // 默认操作：查看购物车，放入 request 后转发到 cart.jsp
         request.setAttribute("cart", cart);
         request.setAttribute("totalAmount", calcTotal(cart));
@@ -127,6 +133,45 @@ public class CartServlet extends HttpServlet {
         String json = "{\"code\":0,\"msg\":\"ok\",\"quantity\":" + quantity
                 + ",\"subtotal\":" + subtotal.toPlainString()
                 + ",\"total\":" + total.toPlainString() + "}";
+        writeJson(response, json);
+    }
+
+    /**
+     * action=remove：从购物车移除某商品
+     */
+    private void removeItem(HttpServletRequest request, HttpServletResponse response, List<CartItem> cart) throws IOException {
+        String pidStr = request.getParameter("pid");
+        if (pidStr == null) {
+            writeJson(response, "{\"code\":1,\"msg\":\"参数缺失\"}");
+            return;
+        }
+
+        int pid;
+        try {
+            pid = Integer.parseInt(pidStr.trim());
+        } catch (NumberFormatException e) {
+            writeJson(response, "{\"code\":1,\"msg\":\"参数非法\"}");
+            return;
+        }
+
+        // 在购物车中查找并移除
+        CartItem target = null;
+        for (CartItem item : cart) {
+            Integer itemPid = item.getProduct().getPid();
+            if (itemPid != null && itemPid == pid) {
+                target = item;
+                break;
+            }
+        }
+        if (target == null) {
+            writeJson(response, "{\"code\":1,\"msg\":\"商品不在购物车中\"}");
+            return;
+        }
+
+        cart.remove(target);
+
+        BigDecimal total = calcTotal(cart);
+        String json = "{\"code\":0,\"msg\":\"ok\",\"total\":" + total.toPlainString() + "}";
         writeJson(response, json);
     }
 
