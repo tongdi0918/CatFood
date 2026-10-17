@@ -12,7 +12,7 @@
 </head>
 <body>
     <h2>用户登录</h2>
-    <form action="UserLoginServlet" method="post">
+    <form action="UserRegisterServlet" method="post">
         账号：<input type="text" name="username"><br><br>
         密码：<input type="password" name="password"><br><br>
         <input type="submit" value="登录">
