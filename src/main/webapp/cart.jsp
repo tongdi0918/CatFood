@@ -58,7 +58,7 @@
                                     <button type="button" class="qty-plus">+</button>
                                 </td>
                                 <td class="qty-subtotal">¥ <fmt:formatNumber value="${item.subtotal}" pattern="0.00"/></td>
-                                <td>暂未开放</td>
+                                <td><button type="button" class="qty-remove">移除</button></td>
                             </tr>
                         </c:forEach>
                     </tbody>
