@@ -59,6 +59,10 @@
                         </c:forEach>
                     </tbody>
                 </table>
+                <div class="cart-total">
+                    <span>合计：</span>
+                    <span>¥ <fmt:formatNumber value="${totalAmount}" pattern="0.00"/></span>
+                </div>
             </c:otherwise>
         </c:choose>
     </section>

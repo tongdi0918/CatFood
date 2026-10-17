@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +43,19 @@ public class CartServlet extends HttpServlet {
             session.setAttribute("cart", cart);
         }
 
+        // 计算购物车总金额（BigDecimal 保证精度，价格为空则跳过该商品）
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for (CartItem item : cart) {
+            Double price = item.getProduct().getPrice();
+            if (price == null) {
+                continue;
+            }
+            totalAmount = totalAmount.add(BigDecimal.valueOf(price).multiply(BigDecimal.valueOf(item.getQuantity())));
+        }
+
         // 默认操作：查看购物车，放入 request 后转发到 cart.jsp
         request.setAttribute("cart", cart);
+        request.setAttribute("totalAmount", totalAmount);
         request.getRequestDispatcher("/cart.jsp").forward(request, response);
     }
 }
