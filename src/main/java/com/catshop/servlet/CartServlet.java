@@ -48,8 +48,15 @@ public class CartServlet extends HttpServlet {
             session.setAttribute("cart", cart);
         }
 
-        // 修改数量（AJAX）
         String action = request.getParameter("action");
+
+        // 加入购物车（AJAX）
+        if ("add".equals(action)) {
+            addToCart(request, response, cart);
+            return;
+        }
+
+        // 修改数量（AJAX）
         if ("update".equals(action)) {
             updateQuantity(request, response, cart);
             return;
@@ -77,6 +84,77 @@ public class CartServlet extends HttpServlet {
         request.setAttribute("cart", cart);
         request.setAttribute("totalAmount", calcTotal(cart));
         request.getRequestDispatcher("/cart.jsp").forward(request, response);
+    }
+
+    /**
+     * action=add：加入购物车
+     */
+    private void addToCart(HttpServletRequest request, HttpServletResponse response, List<CartItem> cart) throws IOException {
+        String pidStr = request.getParameter("pid");
+        if (pidStr == null) {
+            writeJson(response, "{\"code\":1,\"msg\":\"参数缺失\"}");
+            return;
+        }
+
+        int pid;
+        int quantity = 1; // 未传数量时默认为 1
+        try {
+            pid = Integer.parseInt(pidStr.trim());
+            String qtyStr = request.getParameter("quantity");
+            if (qtyStr != null) {
+                quantity = Integer.parseInt(qtyStr.trim());
+            }
+        } catch (NumberFormatException e) {
+            writeJson(response, "{\"code\":1,\"msg\":\"参数非法\"}");
+            return;
+        }
+
+        // 数量必须为正
+        if (quantity < 1) {
+            writeJson(response, "{\"code\":1,\"msg\":\"数量不能小于1\"}");
+            return;
+        }
+
+        // 从数据库读取商品，不信任客户端提交的名称/价格/库存/图片
+        Product product = new ProductDAO().findById(pid);
+        if (product == null || product.getStatus() == null || product.getStatus() != 1) {
+            writeJson(response, "{\"code\":1,\"msg\":\"商品不存在或已下架\"}");
+            return;
+        }
+
+        // 校验库存
+        Integer stock = product.getStock();
+        if (stock == null) {
+            writeJson(response, "{\"code\":1,\"msg\":\"商品库存异常\"}");
+            return;
+        }
+
+        // 查找购物车中是否已有该商品
+        CartItem existing = null;
+        for (CartItem item : cart) {
+            Integer itemPid = item.getProduct().getPid();
+            if (itemPid != null && itemPid == pid) {
+                existing = item;
+                break;
+            }
+        }
+
+        int existingQty = (existing == null) ? 0 : existing.getQuantity();
+        int newQty = existingQty + quantity;
+        if (newQty > stock) {
+            writeJson(response, "{\"code\":1,\"msg\":\"库存不足，最多还能加入 " + (stock - existingQty) + " 件\"}");
+            return;
+        }
+
+        if (existing != null) {
+            existing.setQuantity(newQty); // 已有商品：累加数量
+        } else {
+            cart.add(new CartItem(product, quantity)); // 新商品：保存数据库查询到的商品对象
+        }
+
+        BigDecimal total = calcTotal(cart);
+        String json = "{\"code\":0,\"msg\":\"ok\",\"total\":" + total.toPlainString() + "}";
+        writeJson(response, json);
     }
 
     /**
