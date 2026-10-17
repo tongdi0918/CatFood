@@ -58,6 +58,12 @@ public class CartServlet extends HttpServlet {
             return;
         }
 
+        // 清空购物车（AJAX）
+        if ("clear".equals(action)) {
+            clearCart(session, response);
+            return;
+        }
+
         // 默认操作：查看购物车，放入 request 后转发到 cart.jsp
         request.setAttribute("cart", cart);
         request.setAttribute("totalAmount", calcTotal(cart));
@@ -173,6 +179,14 @@ public class CartServlet extends HttpServlet {
         BigDecimal total = calcTotal(cart);
         String json = "{\"code\":0,\"msg\":\"ok\",\"total\":" + total.toPlainString() + "}";
         writeJson(response, json);
+    }
+
+    /**
+     * action=clear：清空购物车
+     */
+    private void clearCart(HttpSession session, HttpServletResponse response) throws IOException {
+        session.removeAttribute("cart");
+        writeJson(response, "{\"code\":0,\"msg\":\"ok\",\"total\":0}");
     }
 
     /** 计算购物车总金额（BigDecimal 保证精度，价格为空则跳过） */
