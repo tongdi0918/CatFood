@@ -122,4 +122,35 @@
             checkoutBtn.disabled = true;
         });
     }
+
+    // 加购：商品详情页等通过 window.addToCart(pid, quantity) 调用
+    window.addToCart = function (pid, quantity) {
+        if (submitting) return; // 防止重复点击
+        quantity = quantity || 1;
+        submitting = true;
+        fetch(ctx + '/cart?action=add&pid=' + encodeURIComponent(pid)
+                + '&quantity=' + encodeURIComponent(quantity), { method: 'POST' })
+            .then(function (resp) {
+                var ct = resp.headers.get('content-type') || '';
+                if (ct.indexOf('application/json') === -1) {
+                    window.location.href = ctx + '/login.jsp'; // 会话失效，跳登录
+                    return null;
+                }
+                return resp.json();
+            })
+            .then(function (data) {
+                if (data === null) return;
+                if (data.code === 0) {
+                    alert('已加入购物车');
+                } else {
+                    alert(data.msg || '加入失败');
+                }
+            })
+            .catch(function () {
+                alert('网络错误，请重试');
+            })
+            .then(function () {
+                submitting = false;
+            });
+    };
 })();
