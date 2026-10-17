@@ -136,6 +136,54 @@ public class ProductDAO {
         }
         return product;
     }
+    // 5 组合条件查询：分类 + 关键词 同时筛选
+    public List<Product> findByCondition(String category, String keyword) {
+        List<Product> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        StringBuilder sql = new StringBuilder("select * from product where status=1 ");
+        List<Object> params = new ArrayList<>();
+
+        //分类不是全部，拼接分类条件
+        if(category != null && !"全部".equals(category)){
+            sql.append(" and category = ? ");
+            params.add(category);
+        }
+        //关键词不为空，拼接模糊查询
+        if(keyword != null && keyword.trim().length()>0){
+            sql.append(" and pname like ? ");
+            params.add("%"+keyword.trim()+"%");
+        }
+
+        try {
+            conn = DBUtil.getConnection();
+            pstmt = conn.prepareStatement(sql.toString());
+            //给?赋值
+            for(int i=0; i<params.size(); i++){
+                pstmt.setObject(i+1, params.get(i));
+            }
+            rs = pstmt.executeQuery();
+            while (rs.next()){
+                Product product = new Product();
+                product.setPid(rs.getInt("pid"));
+                product.setPname(rs.getString("pname"));
+                product.setPrice(rs.getDouble("price"));
+                product.setCategory(rs.getString("category"));
+                product.setStock(rs.getInt("stock"));
+                product.setImage(rs.getString("image"));
+                product.setDescription(rs.getString("description"));
+                product.setStatus(rs.getInt("status"));
+                list.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            DBUtil.close(conn,pstmt,rs);
+        }
+        return list;
+    }
 
     //【管理员后台】查询全部商品（上架+下架都查出来）
     public List<Product> findAllAdmin() {

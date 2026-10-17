@@ -1,4 +1,4 @@
-package com.catshop.javabean;
+package com.catfood.javabean;
 
 public class Product {
     private int id;
