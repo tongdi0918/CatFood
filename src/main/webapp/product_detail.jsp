@@ -6,7 +6,7 @@
     <title>商品详情 - 喵鲜猫粮商城</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/productDetail.css">
 </head>
-<body>
+<body data-context-path="${pageContext.request.contextPath}">
 
 <nav>
     <strong class="logo">喵鲜猫粮商城</strong>
@@ -41,7 +41,7 @@
         </div>
 
         <div class="detail-buttons">
-            <a href="#" class="btn-primary">加入购物车</a>
+            <a href="#" class="btn-primary" onclick="addToCart(${product.pid}); return false;">加入购物车</a>
             <a href="#" class="btn-secondary">立即购买</a>
         </div>
 
@@ -53,5 +53,6 @@
     <p>©2026 喵鲜猫粮商城 | 第三小组课程项目 版权所有</p>
 </footer>
 
+<script src="${pageContext.request.contextPath}/js/cart.js"></script>
 </body>
 </html>
