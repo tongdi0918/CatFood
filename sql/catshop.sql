@@ -5,7 +5,7 @@
 -- 或在 Navicat / IDEA 中直接运行本文件
 -- 可重复执行，不会报错
 
--- mysql -uroot -pmysql8      Lizx
+-- mysql -uroot -pmysql8
 
 -- ============================================
 
