@@ -59,7 +59,8 @@
         <a href="#">首页</a>
         <a href="ProductListServlet">全部商品</a>
         <a href="#">购物车</a>
-        <a href="#">个人中心</a>
+        <a href="UserInfoServlet">个人中心</a>
+        <a href="UserLogoutServlet">退出登录</a>
     </div>
 </nav>
 

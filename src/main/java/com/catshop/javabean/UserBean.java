@@ -4,6 +4,8 @@ public class UserBean {
     private Integer id;
     private String username;
     private String password;
+    private String name;
+    private String phone;
     //角色 user普通用户 / admin管理员
     private String role;
     public UserBean(){}
@@ -37,4 +39,7 @@ public class UserBean {
     public void setRole(String role) {
         this.role = role;
     }
-}
+    public String getName() {return name;}
+    public void setName(String name) {this.name = name;}
+    public String getPhone() {return phone;}
+    public void setPhone(String phone) {this.phone = phone;}}
