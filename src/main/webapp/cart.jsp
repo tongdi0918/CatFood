@@ -67,6 +67,9 @@
                     <span>合计：</span>
                     <span id="cart-total">¥ <fmt:formatNumber value="${totalAmount}" pattern="0.00"/></span>
                 </div>
+                <div class="cart-actions">
+                    <button type="button" id="cart-clear">清空购物车</button>
+                </div>
             </c:otherwise>
         </c:choose>
     </section>
