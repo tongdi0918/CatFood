@@ -25,7 +25,7 @@
     <p>手机号：${user.phone}</p>
     <p>身份：${user.role == 'admin' ? '管理员' : '普通用户'}</p>
     <br>
-    <a href="updateUserInfo.jsp">修改个人资料</a>
+    <a href="ToUpdateServlet">修改个人资料</a>
 </div>
 </body>
 </html>
