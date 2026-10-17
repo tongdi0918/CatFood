@@ -1,7 +1,9 @@
+<!  http://localhost:8080/catFood_war_exploded/page/order_list.jsp       />
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.catshop.javabean.Order" %>
-<%@ taglib prefix="c" uri="http://xmlns.jcp.org/jsp/jstl/core" %>
+<%@ page import="com.catshop.javabean.OrderBean" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
@@ -12,14 +14,14 @@
 
 <h2 style="margin-bottom:20px;">我的订单</h2>
 <%
-    List<Order> orders = (List<Order>) request.getAttribute("orders");
+    List<OrderBean> orders = (List<OrderBean>) request.getAttribute("orders");
     if (orders == null || orders.isEmpty()) {
 %>
 <div class="card" style="text-align:center;padding:60px;color:#999;">
     暂无订单，<a href="${pageContext.request.contextPath}/products">去选购吧~</a>
 </div>
 <% }else{ %>
-    <% for (Order order : orders) { %>
+    <% for (OrderBean order : orders) { %>
     <div class="card" style="margin-bottom:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
             <div>

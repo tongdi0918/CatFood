@@ -1,6 +1,6 @@
-package com.catfood.dao;
-import com.catfood.javabean.Order;      //导入订单Bean类
-import com.catfood.javabean.OrderItem;      //导入订单明细Bean类
+package com.catshop.dao;
+import com.catshop.javabean.OrderBean;      //导入订单Bean类
+import com.catshop.javabean.OrderItemBean;      //导入订单明细Bean类
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -16,7 +16,7 @@ public class OrderDAO {
     /** 创建订单（含订单明细，事务） */
 
 
-    public boolean createOrder(Order order, List<OrderItem> items) {
+    public boolean createOrder(OrderBean order, List<OrderItemBean> items) {
         Connection conn = null;
         try {
             conn = DBUtil.getConnection();
@@ -47,7 +47,7 @@ public class OrderDAO {
             // 2. 插入订单明细
             String itemSql = "INSERT INTO order_item (order_id, product_id, product_name, price, quantity) VALUES (?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(itemSql);
-            for (OrderItem item : items) {
+            for (OrderItemBean item : items) {
                 pstmt.setInt(1, orderId);
                 pstmt.setInt(2, item.getProductId());
                 pstmt.setString(3, item.getProductName());
@@ -60,20 +60,14 @@ public class OrderDAO {
 
             // 3. 扣减库存
             ProductDAO productDAO = new ProductDAO();
-            for (OrderItem item : items) {
-                // 更新商品库存，保证同一事务
-                String stockSql = "UPDATE product SET stock = stock - ? WHERE id = ? AND stock >= ?";
-                PreparedStatement stockPstmt = conn.prepareStatement(stockSql);
-                stockPstmt.setInt(1, item.getQuantity());
-                stockPstmt.setInt(2, item.getProductId());
-                stockPstmt.setInt(3, item.getQuantity());
-                int affected = stockPstmt.executeUpdate();
-                stockPstmt.close();
+            for (OrderItemBean item : items) {
+                int affected = productDAO.reduceStock(conn, item.getProductId(), item.getQuantity());
                 if (affected == 0) {
-                    conn.rollback();        //回滚（撤销前面插入订单、明细）
-                    return false; // 库存不足
+                    conn.rollback();
+                    return false;
                 }
             }
+
 
             conn.commit();      //有步骤全部正常：提交事务，数据永久写入数据库
             return true;
@@ -98,9 +92,9 @@ public class OrderDAO {
     }
 
     /** 查询用户的所有订单  */
-    public List<Order> findByUserId(int userId) {
+    public List<OrderBean> findByUserId(int userId) {
         String sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY create_time DESC";
-        List<Order> list = new ArrayList<>();
+        List<OrderBean> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -110,7 +104,7 @@ public class OrderDAO {
             pstmt.setInt(1, userId);
             rs = pstmt.executeQuery();
             while (rs.next()) {
-                list.add(mapOrder(rs));     //把数据库行转为 Order 实体对象，放入 list
+                list.add(mapOrder(rs));     //把数据库行转为 OrderBean 实体对象，放入 list
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -121,10 +115,10 @@ public class OrderDAO {
     }
 
     /** 查询所有订单（后台管理）  */
-    public List<Order> findAll() {
+    public List<OrderBean> findAll() {
         //订单表o  左连接 用户表u。取出username，即使用户被删除，订单记录依然查得到
         String sql = "SELECT o.*, u.username FROM orders o LEFT JOIN user u ON o.user_id = u.id ORDER BY o.create_time DESC";
-        List<Order> list = new ArrayList<>();
+        List<OrderBean> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -133,7 +127,7 @@ public class OrderDAO {
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
             while (rs.next()) {
-                Order order = mapOrder(rs);     //每行结果映射 Order实体
+                OrderBean order = mapOrder(rs);     //每行结果映射 Order实体
                 order.setUsername(rs.getString("username"));    //把联查出来的username 赋值给 order实体的username
                 list.add(order);        //Order实体存入集合
             }
@@ -146,9 +140,9 @@ public class OrderDAO {
     }
 
     /** 查询orderId=?的订单明细 */
-    public List<OrderItem> findItemsByOrderId(int orderId) {
+    public List<OrderItemBean> findItemsByOrderId(int orderId) {
         String sql = "SELECT * FROM order_item WHERE order_id = ?";
-        List<OrderItem> list = new ArrayList<>();
+        List<OrderItemBean> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -158,7 +152,7 @@ public class OrderDAO {
             pstmt.setInt(1, orderId);
             rs = pstmt.executeQuery();
             while (rs.next()) {
-                OrderItem item = new OrderItem();       //实例化一个OrderItem实体
+                OrderItemBean item = new OrderItemBean();       //实例化一个OrderItem实体
                 item.setId(rs.getInt("id"));
                 item.setOrderId(rs.getInt("order_id"));
                 item.setProductId(rs.getInt("product_id"));
@@ -199,8 +193,8 @@ public class OrderDAO {
         return "CF" + System.currentTimeMillis() + (int)(Math.random() * 1000);
     }
 
-    private Order mapOrder(ResultSet rs) throws SQLException {  //把 ResultSet每行数据封装成 Order实体
-        Order o = new Order();
+    private OrderBean mapOrder(ResultSet rs) throws SQLException {  //把 ResultSet每行数据封装成 Order实体
+        OrderBean o = new OrderBean();
         o.setId(rs.getInt("id"));
         o.setOrderNo(rs.getString("order_no"));
         o.setUserId(rs.getInt("user_id"));

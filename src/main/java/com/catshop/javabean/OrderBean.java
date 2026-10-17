@@ -3,16 +3,17 @@
 id,orderNo,userId,totalAmount,receiver,phone,address,status,createTime,payTime
  */
 
-//package com.catfood.model;
+package com.catshop.javabean;
 
 import java.math.BigDecimal;    //高精度小数,避免精度丢失
 import java.util.Date;
 import java.util.List;
 
+
 /**
  * 订单实体类
  */
-public class Order {
+public class OrderBean {
     private int id;     //主键 id
     private String orderNo;     //业务唯一单号
     private int userId;     //下单用户 id
@@ -26,9 +27,9 @@ public class Order {
 
     // 关联查询字段
     private String username;    //把联查出来的 username 赋值给 order实体
-    private List<OrderItem> items;      //订单集合
+    private List<OrderItemBean> items;      //订单集合
 
-    public Order() {}   //无参构造
+    public OrderBean() {}   //无参构造
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -55,8 +56,8 @@ public class Order {
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
-    public List<OrderItem> getItems() { return items; }
-    public void setItems(List<OrderItem> items) { this.items = items; }
+    public List<OrderItemBean> getItems() { return items; }
+    public void setItems(List<OrderItemBean> items) { this.items = items; }
 
     public String getStatusText() {
         switch (status) {

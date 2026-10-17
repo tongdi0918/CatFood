@@ -1,8 +1,8 @@
-package com.catfood.javabean;
+package com.catshop.javabean;
 import java.math.BigDecimal;
 
 /* 订单明细实体类 */
-public class OrderItem {
+public class OrderItemBean {
     private int id;         //订单明细主键
     private int orderId;        // 外键,这条明细属于哪个订单
     private int productId;          //商品 id
@@ -11,7 +11,7 @@ public class OrderItem {
     private int quantity;       //购买数量
 
 
-    public OrderItem() {}       //无参构造
+    public OrderItemBean() {}       //无参构造
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
