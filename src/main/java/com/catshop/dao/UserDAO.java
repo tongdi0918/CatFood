@@ -1,17 +1,19 @@
 package com.catshop.dao;
+
 import com.catshop.javabean.UserBean;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class UserDAO {
+
     //登录查询
     public UserBean login(String username, String password) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         UserBean user = null;
-        String sql = "select * from user where username=? and password=?";
+        String sql = "select * from `user` where username=? and password=?";
         try {
             conn = DBUtil.getConnection();
             pstmt = conn.prepareStatement(sql);
@@ -32,14 +34,11 @@ public class UserDAO {
         }
         return user;
     }
-
     //注册新增用户
     public boolean register(String username, String password) {
         Connection conn = null;
         PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        // ✅ 增加role，默认普通用户 'user'
-        String sql = "insert into user(username,password,role) values (?,?,'user')";
+        String sql = "insert into `user`(username,password,role) values (?,?,'user')";
         try {
             conn = DBUtil.getConnection();
             pstmt = conn.prepareStatement(sql);
@@ -51,7 +50,7 @@ public class UserDAO {
             e.printStackTrace();
             return false;
         } finally {
-            DBUtil.close(conn, pstmt, rs);
+            DBUtil.close(conn, pstmt);
         }
     }
 }
