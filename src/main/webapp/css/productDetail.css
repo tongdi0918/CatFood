@@ -1,0 +1,162 @@
+/*===== 全局 + 导航 + 页脚（公共部分）=====*/
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: "Microsoft Yahei",sans-serif;
+}
+body{
+    background-color: #fff9f2;
+    color:#333;
+    line-height:1.6;
+}
+a{
+    text-decoration: none;
+}
+/*导航栏*/
+nav{
+    background-color: #d46b29;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding:18px 5%;
+}
+.logo{
+    color:white;
+    font-size:26px;
+    font-weight:bold;
+}
+.nav-links a{
+    color:white;
+    margin-left:24px;
+    font-size:16px;
+}
+.nav-links a:hover{
+    text-decoration: underline;
+}
+/*页脚footer*/
+footer{
+    background:#443328;
+    color:#fff;
+    text-align:center;
+    padding:20px;
+    margin-top:60px;
+}
+
+/*===== 下面是详情页专属样式 =====*/
+.detail-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.detail-img {
+    background: #fff9f2;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-img img {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+    object-fit: cover;
+    /*防止图片撑破盒子*/
+    display:block;
+}
+
+.detail-info h1 {
+    color: #333;
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+.detail-price {
+    color: #e03030;
+    font-size: 36px;
+    font-weight: bold;
+    margin: 16px 0;
+}
+
+.detail-meta {
+    margin-bottom: 20px;
+}
+
+.detail-meta p {
+    color: #666;
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.detail-description {
+    background: #fff9f2;
+    padding: 18px;
+    border-radius: 12px;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 24px;
+}
+
+.detail-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.btn-primary, .btn-secondary {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #d46b29;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #c05e22;
+}
+
+.btn-secondary {
+    background: #fff0e6;
+    color: #d46b29;
+    border: 1px solid #ffd9bf;
+}
+
+.btn-secondary:hover {
+    background: #ffe3cd;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #d46b29;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/*移动端适配*/
+@media (max-width: 768px) {
+    .detail-container {
+        grid-template-columns: 1fr;
+    }
+}
