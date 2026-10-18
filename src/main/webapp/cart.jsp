@@ -50,6 +50,9 @@
                                 <td>
                                     <img src="${pageContext.request.contextPath}${item.product.image}" alt="${item.product.pname}">
                                     <span>${item.product.pname}</span>
+                                    <c:if test="${item.product.status != 1}">
+                                        <span class="off-shelf-tag">已下架</span>
+                                    </c:if>
                                     <c:if test="${item.quantity > item.product.stock}">
                                         <div class="stock-warning">库存不足，请调整数量</div>
                                     </c:if>
