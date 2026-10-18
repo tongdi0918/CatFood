@@ -48,7 +48,7 @@
                     </thead>
                     <tbody>
                         <c:forEach items="${sessionScope.cart}" var="item">
-                            <tr data-pid="${item.product.pid}" data-stock="${item.product.stock}">
+                            <tr data-pid="${item.product.pid}" data-stock="${item.product.stock}" data-price="${item.product.price}">
                                 <td><input type="checkbox" class="cart-item-check" checked></td>
                                 <td>
                                     <img src="${pageContext.request.contextPath}${item.product.image}" alt="${item.product.pname}">

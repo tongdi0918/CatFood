@@ -29,6 +29,14 @@
         }, 1500);
     }
 
+    // 根据单价 × 数量计算单个商品小计并更新显示
+    function updateSubtotal(tr) {
+        var price = parseFloat(tr.getAttribute('data-price'));
+        var qty = parseQuantity(tr.querySelector('.qty-value').value);
+        if (isNaN(price) || qty === null) return;
+        tr.querySelector('.qty-subtotal').textContent = '¥ ' + fmt(price * qty);
+    }
+
     function updateQuantity(tr, pid, quantity) {
         if (submitting) return;   // 避免重复提交
         if (quantity < 1) return; // 非法数量，不发起请求
@@ -47,7 +55,7 @@
             .then(function (data) {
                 if (data.code === 0) {
                     tr.querySelector('.qty-value').value = data.quantity;
-                    tr.querySelector('.qty-subtotal').textContent = '¥ ' + fmt(data.subtotal);
+                    updateSubtotal(tr);
                     document.getElementById('cart-total').textContent = '¥ ' + fmt(data.total);
                     showFeedback('数量已更新');
                 } else {
