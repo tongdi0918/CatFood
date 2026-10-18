@@ -200,13 +200,55 @@
         clearBtn.addEventListener('click', clearCart);
     }
 
-    // 提交订单：防止连续点击
+    // 提交订单：收集勾选商品(pid + 最新数量)写入隐藏域，防止重复点击
     var checkoutForm = document.getElementById('checkout-form');
     var checkoutBtn = document.getElementById('checkout-submit');
     if (checkoutForm && checkoutBtn) {
         checkoutForm.addEventListener('submit', function (e) {
             if (checkoutBtn.disabled) {
                 e.preventDefault(); // 已提交中，阻止重复提交
+                return;
+            }
+
+            // 移除旧的勾选商品隐藏域，按当前勾选重新生成
+            checkoutForm.querySelectorAll('input[name="pid"], input[name="quantity"]').forEach(function (el) {
+                el.remove();
+            });
+
+            var anyChecked = false;
+            var invalid = false;
+            document.querySelectorAll('.cart-item-check').forEach(function (ck) {
+                if (!ck.checked || invalid) return;
+                anyChecked = true;
+                var tr = ck.closest('tr');
+                // 以输入框当前数量为准，避免“改数量后立即提交”的异步竞态
+                var qty = parseQuantity(tr.querySelector('.qty-value').value);
+                if (qty === null) {
+                    invalid = true;
+                    return;
+                }
+
+                var pidInput = document.createElement('input');
+                pidInput.type = 'hidden';
+                pidInput.name = 'pid';
+                pidInput.value = tr.getAttribute('data-pid');
+                checkoutForm.appendChild(pidInput);
+
+                var qtyInput = document.createElement('input');
+                qtyInput.type = 'hidden';
+                qtyInput.name = 'quantity';
+                qtyInput.value = qty;
+                checkoutForm.appendChild(qtyInput);
+            });
+
+            if (invalid) {
+                e.preventDefault();
+                showFeedback('勾选商品的数量无效，请重新输入');
+                return;
+            }
+            if (!anyChecked) {
+                e.preventDefault();
+                showFeedback('请至少勾选一件商品再结算');
                 return;
             }
             checkoutBtn.disabled = true;

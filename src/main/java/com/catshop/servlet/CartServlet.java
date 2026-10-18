@@ -16,7 +16,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**购物车 Servlet
  * 支持 action: view（默认）/ update / remove / clear / submit
@@ -295,6 +297,15 @@ public class CartServlet extends HttpServlet {
             return;
         }
 
+        // 读取前端勾选的商品 pid 列表（后端会重新校验，不信任客户端价格/数量）
+        String[] pidParams = request.getParameterValues("pid");
+        String[] qtyParams = request.getParameterValues("quantity");
+        if (pidParams == null || pidParams.length == 0) {
+            request.setAttribute("error", "请至少勾选一件商品再结算");
+            request.getRequestDispatcher("/cart.jsp").forward(request, response);
+            return;
+        }
+
         // 收货信息校验
         String receiver = trimToNull(request.getParameter("receiver"));
         String phone = trimToNull(request.getParameter("phone"));
@@ -323,15 +334,32 @@ public class CartServlet extends HttpServlet {
         }
         session.setAttribute("orderSubmitting", Boolean.TRUE);
         try {
-            // 重新从数据库校验商品并组装订单明细（不信任客户端价格）
+            // 只结算前端勾选的商品，并重新从数据库校验（不信任客户端价格/数量）
             ProductDAO productDAO = new ProductDAO();
             List<OrderItemBean> items = new ArrayList<OrderItemBean>();
+            List<CartItem> selectedItems = new ArrayList<CartItem>();
+            Set<Integer> seenPids = new HashSet<Integer>();
             BigDecimal totalAmount = BigDecimal.ZERO;
-            for (CartItem ci : cart) {
-                Integer pid = ci.getProduct().getPid();
-                if (pid == null) {
+            for (int i = 0; i < pidParams.length; i++) {
+                String pidStr = pidParams[i];
+                int pid;
+                try {
+                    pid = Integer.parseInt(pidStr.trim());
+                } catch (NumberFormatException e) {
                     echoForm(request, receiver, phone, address);
-                    request.setAttribute("error", "购物车数据异常");
+                    request.setAttribute("error", "商品参数非法");
+                    request.getRequestDispatcher("/cart.jsp").forward(request, response);
+                    return;
+                }
+                // 去重：同一商品重复勾选只结算一次
+                if (!seenPids.add(pid)) {
+                    continue;
+                }
+                // 数量以 Session 购物车为准，不信任客户端提交的数量
+                CartItem ci = findCartItem(cart, pid);
+                if (ci == null) {
+                    echoForm(request, receiver, phone, address);
+                    request.setAttribute("error", "购物车数据异常，请刷新后重试");
                     request.getRequestDispatcher("/cart.jsp").forward(request, response);
                     return;
                 }
@@ -350,13 +378,32 @@ public class CartServlet extends HttpServlet {
                     request.getRequestDispatcher("/cart.jsp").forward(request, response);
                     return;
                 }
+                // 数量：优先采用前端提交的最新数量，缺失则回退购物车数量（后端仍会校验合法性）
                 int quantity = ci.getQuantity();
-                if (quantity < 1 || quantity > stock) {
+                if (qtyParams != null && i < qtyParams.length && qtyParams[i] != null && !qtyParams[i].trim().isEmpty()) {
+                    try {
+                        quantity = Integer.parseInt(qtyParams[i].trim());
+                    } catch (NumberFormatException e) {
+                        echoForm(request, receiver, phone, address);
+                        request.setAttribute("error", "商品数量非法");
+                        request.getRequestDispatcher("/cart.jsp").forward(request, response);
+                        return;
+                    }
+                }
+                if (quantity < 1) {
+                    echoForm(request, receiver, phone, address);
+                    request.setAttribute("error", "商品「" + p.getPname() + "」数量不能小于1");
+                    request.getRequestDispatcher("/cart.jsp").forward(request, response);
+                    return;
+                }
+                if (quantity > stock) {
                     echoForm(request, receiver, phone, address);
                     request.setAttribute("error", "商品「" + p.getPname() + "」库存不足");
                     request.getRequestDispatcher("/cart.jsp").forward(request, response);
                     return;
                 }
+                // 同步购物车数量，保持一致
+                ci.setQuantity(quantity);
 
                 OrderItemBean item = new OrderItemBean();
                 item.setProductId(pid);
@@ -364,6 +411,7 @@ public class CartServlet extends HttpServlet {
                 item.setPrice(BigDecimal.valueOf(price));
                 item.setQuantity(quantity);
                 items.add(item);
+                selectedItems.add(ci);
                 totalAmount = totalAmount.add(BigDecimal.valueOf(price).multiply(BigDecimal.valueOf(quantity)));
             }
 
@@ -379,7 +427,11 @@ public class CartServlet extends HttpServlet {
 
             boolean ok = new OrderDAO().createOrder(order, items);
             if (ok) {
-                session.removeAttribute("cart");
+                // 只移除本次结算的勾选商品，未勾选商品保留在购物车
+                cart.removeAll(selectedItems);
+                if (cart.isEmpty()) {
+                    session.removeAttribute("cart");
+                }
                 // 保存订单摘要到 Session，供成功页展示
                 session.setAttribute("lastOrderNo", order.getOrderNo());
                 session.setAttribute("lastOrderAmount", order.getTotalAmount());
@@ -392,6 +444,17 @@ public class CartServlet extends HttpServlet {
         } finally {
             session.removeAttribute("orderSubmitting");
         }
+    }
+
+    /** 在购物车中按 pid 查找商品项，未找到返回 null */
+    private CartItem findCartItem(List<CartItem> cart, int pid) {
+        for (CartItem item : cart) {
+            Integer itemPid = item.getProduct().getPid();
+            if (itemPid != null && itemPid == pid) {
+                return item;
+            }
+        }
+        return null;
     }
 
     /** 查看购物车时刷新每件商品的最新价格、库存与上下架状态（快照数据可能过期） */
@@ -438,17 +501,9 @@ public class CartServlet extends HttpServlet {
         return (s == null || s.trim().isEmpty()) ? null : s.trim();
     }
 
-    /** 校验手机号是否为 11 位数字 */
+    /** 校验手机号是否为合法中国大陆手机号（1开头，第二位3-9，共11位数字） */
     private boolean isValidPhone(String phone) {
-        if (phone == null || phone.length() != 11) {
-            return false;
-        }
-        for (int i = 0; i < phone.length(); i++) {
-            if (!Character.isDigit(phone.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+        return phone != null && phone.matches("^1[3-9]\\d{9}$");
     }
 
     /** 结算表单回显 */
