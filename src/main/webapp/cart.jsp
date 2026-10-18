@@ -16,7 +16,7 @@
     <div class="nav-links">
         <a href="${pageContext.request.contextPath}/index.jsp">首页</a>
         <a href="${pageContext.request.contextPath}/ProductListServlet">全部商品</a>
-        <a href="${pageContext.request.contextPath}/cart">购物车</a>
+        <a href="${pageContext.request.contextPath}/cart">购物车<span id="cart-count" style="display:none;background:#fff;color:#d46b29;border-radius:10px;padding:0 6px;margin-left:4px;font-size:12px;"></span></a>
         <a href="#">个人中心</a>
     </div>
 </nav>
@@ -94,7 +94,7 @@
                         </p>
                         <p>
                             <label>联系电话：</label>
-                            <input type="text" name="phone" value="${phone}" maxlength="11" placeholder="请输入11位手机号" required>
+                            <input type="text" name="phone" value="${phone}" maxlength="11" placeholder="请输入11位手机号" required pattern="1[3-9][0-9]{9}" title="请输入11位大陆手机号，以1开头">
                         </p>
                         <p>
                             <label>收货地址：</label>
@@ -113,5 +113,6 @@
 </footer>
 
 <script src="${pageContext.request.contextPath}/js/cart.js"></script>
+<script>window.refreshCartCount && window.refreshCartCount();</script>
 </body>
 </html>

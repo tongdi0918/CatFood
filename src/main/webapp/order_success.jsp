@@ -7,6 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>下单成功 - 喵鲜猫粮商城</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cart.css">
 </head>
 <body>
 
@@ -25,14 +26,16 @@
 </header>
 
 <main>
-    <c:if test="${not empty sessionScope.lastOrderNo}">
-        <div class="order-summary">
-            <p>订单号：<strong>${sessionScope.lastOrderNo}</strong></p>
-            <p>订单金额：¥ <strong><fmt:formatNumber value="${sessionScope.lastOrderAmount}" pattern="0.00"/></strong></p>
-        </div>
-    </c:if>
-    <p>您的订单已提交成功，感谢购买！</p>
-    <a href="${pageContext.request.contextPath}/ProductListServlet">继续购物</a>
+    <section class="cart-container order-success">
+        <c:if test="${not empty sessionScope.lastOrderNo}">
+            <div class="order-summary">
+                <p>订单号：<strong>${sessionScope.lastOrderNo}</strong></p>
+                <p>订单金额：¥ <strong><fmt:formatNumber value="${sessionScope.lastOrderAmount}" pattern="0.00"/></strong></p>
+            </div>
+        </c:if>
+        <p class="order-success-tip">您的订单已提交成功，感谢购买！</p>
+        <a class="continue-shopping" href="${pageContext.request.contextPath}/ProductListServlet">继续购物</a>
+    </section>
 </main>
 
 <footer>

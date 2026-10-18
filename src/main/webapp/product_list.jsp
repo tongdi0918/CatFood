@@ -7,13 +7,13 @@
     <title>喵鲜猫粮商城 - 商品列表</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/product_list.css">
 </head>
-<body>
+<body data-context-path="${pageContext.request.contextPath}">
 <nav>
     <strong class="logo">喵鲜猫粮商城</strong>
     <div class="nav-links">
         <a href="index.jsp">首页</a>
         <a href="ProductListServlet">全部商品</a>
-        <a href="#">购物车</a>
+        <a href="${pageContext.request.contextPath}/cart">购物车<span id="cart-count" style="display:none;background:#fff;color:#d46b29;border-radius:10px;padding:0 6px;margin-left:4px;font-size:12px;"></span></a>
         <a href="#">个人中心</a>
     </div>
 </nav>
@@ -72,5 +72,7 @@
 <footer>
     <p>&copy;202610喵鲜猫粮商城 | 第三小组课程项目 版权所有</p>
 </footer>
+<script src="${pageContext.request.contextPath}/js/cart.js"></script>
+<script>window.refreshCartCount && window.refreshCartCount();</script>
 </body>
 </html>
