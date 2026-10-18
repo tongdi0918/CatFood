@@ -51,8 +51,10 @@
                             <tr data-pid="${item.product.pid}" data-stock="${item.product.stock}" data-price="${item.product.price}">
                                 <td><input type="checkbox" class="cart-item-check" checked></td>
                                 <td>
-                                    <img src="${pageContext.request.contextPath}${item.product.image}" alt="${item.product.pname}">
-                                    <span>${item.product.pname}</span>
+                                    <a href="${pageContext.request.contextPath}/ProductDetailServlet?pid=${item.product.pid}">
+                                        <img src="${pageContext.request.contextPath}${item.product.image}" alt="${item.product.pname}">
+                                        <span>${item.product.pname}</span>
+                                    </a>
                                     <c:if test="${item.product.status != 1}">
                                         <span class="off-shelf-tag">已下架</span>
                                     </c:if>
