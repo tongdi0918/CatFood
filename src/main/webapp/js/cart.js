@@ -149,6 +149,26 @@
         });
     });
 
+    // 全选 / 取消全选
+    var selectAll = document.getElementById('cart-select-all');
+    var itemChecks = document.querySelectorAll('.cart-item-check');
+    if (selectAll) {
+        selectAll.addEventListener('change', function () {
+            itemChecks.forEach(function (ck) {
+                ck.checked = selectAll.checked;
+            });
+        });
+        itemChecks.forEach(function (ck) {
+            ck.addEventListener('change', function () {
+                var allChecked = true;
+                itemChecks.forEach(function (c) {
+                    if (!c.checked) allChecked = false;
+                });
+                selectAll.checked = allChecked;
+            });
+        });
+    }
+
     var clearBtn = document.getElementById('cart-clear');
     if (clearBtn) {
         clearBtn.addEventListener('click', clearCart);

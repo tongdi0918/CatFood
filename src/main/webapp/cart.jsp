@@ -38,6 +38,7 @@
                 <table class="cart-table">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="cart-select-all" checked></th>
                             <th>商品</th>
                             <th>单价</th>
                             <th>数量</th>
@@ -48,6 +49,7 @@
                     <tbody>
                         <c:forEach items="${sessionScope.cart}" var="item">
                             <tr data-pid="${item.product.pid}" data-stock="${item.product.stock}">
+                                <td><input type="checkbox" class="cart-item-check" checked></td>
                                 <td>
                                     <img src="${pageContext.request.contextPath}${item.product.image}" alt="${item.product.pname}">
                                     <span>${item.product.pname}</span>
