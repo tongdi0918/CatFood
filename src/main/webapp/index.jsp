@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isELIgnored="false" %>
 <%@ page import="com.catshop.javabean.UserBean" %>
 <html>
 <head>
@@ -189,7 +190,7 @@
        }
             </style>
         </head>
-        <body>
+        <body data-context-path="${pageContext.request.contextPath}">
         <!-- 顶部导航 -->
         <div class="top-nav">
             <div class="logo">喵鲜<span>猫粮商城</span></div>
@@ -198,7 +199,8 @@
             %>
            <div class="nav-links">
                <a href="index.jsp">首页</a>
-               <a href="product_list.jsp">全部商品</a>
+               <a href="ProductListServlet">全部商品</a>
+               <a href="${pageContext.request.contextPath}/cart">购物车<span id="cart-count" style="display:none;background:#fff;color:#d46b29;border-radius:10px;padding:0 6px;margin-left:4px;font-size:12px;"></span></a>
                <a href="userinfo.jsp">个人中心</a>
                <%
                    if(loginUser != null && "admin".equals(loginUser.getRole())){
@@ -207,7 +209,7 @@
                <%
                    }
                %>
-               <a href="UserLogoutServlet">退出登录</a>
+               <a href="LogoutServlet">退出登录</a>
            </div>
         </div>
         <!-- 顶部横幅 -->
@@ -215,14 +217,14 @@
             <div class="banner-content">
                 <h1>喵鲜猫粮商城</h1>
                 <p>专为猫咪准备的优质猫粮，科学配方，健康好粮</p>
-                <a href="product_list.jsp" class="btn-primary">进入商品商城</a>
+                <a href="ProductListServlet" class="btn-primary">进入商品商城</a>
             </div>
         </div>
         <!-- 首页功能入口 -->
         <div class="section">
             <h2 class="section-title">商城入口</h2>
             <div class="feature-grid">
-                <a href="product_list.jsp" class="feature-item">
+                <a href="ProductListServlet" class="feature-item">
                     <div class="feature-icon">🛒</div>
                     <h3>全部商品</h3>
                     <p>浏览猫粮商品</p>
@@ -232,7 +234,7 @@
                     <h3>个人中心</h3>
                     <p>查看个人信息</p>
                 </a>
-                <a href="order_Servlet" class="feature-item">
+                <a href="orders" class="feature-item">
                     <div class="feature-icon">📦</div>
                     <h3>我的订单</h3>
                     <p>管理订单记录</p>
@@ -265,5 +267,7 @@
         <footer>
             &copy; 2026 喵鲜猫粮商城 | 小猫的每一口，都值得认真选择|第三小组课程项目
         </footer>
+        <script src="${pageContext.request.contextPath}/js/cart.js"></script>
+        <script>window.refreshCartCount && window.refreshCartCount();</script>
         </body>
         </html>

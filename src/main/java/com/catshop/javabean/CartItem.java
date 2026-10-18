@@ -1,5 +1,7 @@
 package com.catshop.javabean;
 
+import java.math.BigDecimal;
+
 /* 购物车项实体类
    product  ：商品快照（含 pid/pname/price/image/stock 等）
    quantity ：购买数量
@@ -21,6 +23,11 @@ public class CartItem {
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    /* 小计 = 单价 × 数量 */
-    public double getSubtotal() { return product.getPrice() * quantity; }
+    /* 小计 = 单价 × 数量（用 BigDecimal 保证精度） */
+    public BigDecimal getSubtotal() {
+        if (product == null || product.getPrice() == null) {
+            return BigDecimal.ZERO;
+        }
+        return BigDecimal.valueOf(product.getPrice()).multiply(BigDecimal.valueOf(quantity));
+    }
 }

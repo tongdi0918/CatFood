@@ -3,7 +3,7 @@
 body { font-family: "Microsoft YaHei", Arial, sans-serif; background: #f7f5f2; color: #333; }
 
 /* 顶部导航 */
-nav { display: flex; justify-content: space-between; align-items: center; background: #d46b29; color: #fff; padding: 14px 30px; }
+nav { display: flex; justify-content: space-between; align-items: center; background: #d46b29; color: #fff; padding: 14px 30px; flex-wrap: wrap; }
 nav .logo { font-size: 20px; font-weight: bold; }
 nav .nav-links a { color: #fff; text-decoration: none; margin-left: 18px; font-size: 15px; }
 
@@ -12,7 +12,7 @@ header { text-align: center; padding: 30px 0 10px; }
 header h1 { font-size: 28px; }
 
 /* 容器 */
-main { width: 90%; max-width: 1000px; margin: 0 auto 40px; }
+main { width: 90%; max-width: 1100px; margin: 0 auto 40px; }
 .cart-container { background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
 
 /* 空购物车 */
@@ -21,12 +21,19 @@ main { width: 90%; max-width: 1000px; margin: 0 auto 40px; }
 .cart-empty a { color: #d46b29; text-decoration: none; }
 
 /* 表格 */
-.cart-table { width: 100%; border-collapse: collapse; }
-.cart-table th, .cart-table td { padding: 12px 8px; border-bottom: 1px solid #eee; text-align: center; }
+.cart-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.cart-table th, .cart-table td { padding: 12px 8px; border-bottom: 1px solid #eee; text-align: center; vertical-align: middle; word-break: break-word; }
 .cart-table th { color: #999; font-weight: normal; font-size: 14px; }
-.cart-table img { width: 60px; height: 60px; vertical-align: middle; margin-right: 8px; }
-.cart-table td:first-child { text-align: left; }
-.cart-table td a { color: inherit; text-decoration: none; }
+/* 固定各列宽度：勾选 | 商品 | 单价 | 数量 | 小计 | 操作 */
+.cart-table th:nth-child(1), .cart-table td:nth-child(1) { width: 44px; }
+.cart-table th:nth-child(3), .cart-table td:nth-child(3) { width: 90px; }
+.cart-table th:nth-child(4), .cart-table td:nth-child(4) { width: 150px; }
+.cart-table th:nth-child(5), .cart-table td:nth-child(5) { width: 100px; }
+.cart-table th:nth-child(6), .cart-table td:nth-child(6) { width: 90px; }
+/* 商品单元格：图片 + 名称左对齐，图片固定尺寸不溢出 */
+.cart-table td:nth-child(2) { text-align: left; }
+.cart-table td:nth-child(2) a { display: inline-flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; max-width: 100%; }
+.cart-table img { width: 60px; height: 60px; max-width: 60px; max-height: 60px; object-fit: cover; border-radius: 4px; flex: 0 0 auto; display: block; }
 
 /* 数量控件 */
 .cart-qty button { width: 26px; height: 26px; border: 1px solid #ddd; background: #fff; cursor: pointer; }
@@ -41,7 +48,7 @@ main { width: 90%; max-width: 1000px; margin: 0 auto 40px; }
 .cart-total #cart-total { color: #d46b29; font-size: 22px; font-weight: bold; }
 
 /* 操作按钮 */
-.cart-actions { text-align: right; }
+.cart-actions { text-align: right; margin-bottom: 8px; }
 #cart-clear { background: #fff; border: 1px solid #ccc; color: #666; padding: 8px 18px; cursor: pointer; border-radius: 4px; }
 .qty-remove { background: #fff; border: 1px solid #e03e2d; color: #e03e2d; padding: 6px 12px; cursor: pointer; border-radius: 4px; }
 
@@ -55,8 +62,23 @@ main { width: 90%; max-width: 1000px; margin: 0 auto 40px; }
 .cart-checkout { margin-top: 20px; border-top: 1px dashed #eee; padding-top: 16px; }
 .cart-checkout p { margin-bottom: 10px; }
 .cart-checkout label { display: inline-block; width: 90px; color: #666; }
-.cart-checkout input { width: 260px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+.cart-checkout input { width: 260px; max-width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
 #checkout-submit { background: #d46b29; color: #fff; border: none; padding: 10px 30px; font-size: 16px; border-radius: 4px; cursor: pointer; }
 
 /* 页脚 */
 footer { text-align: center; color: #999; padding: 20px; font-size: 14px; }
+
+/* 下单成功页 */
+.order-success { text-align: center; padding: 40px 24px; }
+.order-summary { background: #faf5f0; border: 1px solid #f0e2d5; border-radius: 6px; padding: 16px 20px; margin-bottom: 16px; font-size: 16px; }
+.order-summary p { margin-bottom: 8px; }
+.order-success-tip { font-size: 16px; color: #2e8b57; margin-bottom: 16px; }
+.continue-shopping { display: inline-block; background: #d46b29; color: #fff; text-decoration: none; padding: 10px 24px; border-radius: 4px; }
+
+/* 小屏适配：收窄时隐藏次要列，保证不挤压溢出 */
+@media (max-width: 720px) {
+    main { width: 98%; }
+    .cart-container { padding: 12px; }
+    .cart-table th:nth-child(3), .cart-table td:nth-child(3),
+    .cart-table th:nth-child(5), .cart-table td:nth-child(5) { display: none; }
+}

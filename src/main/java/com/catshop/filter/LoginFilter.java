@@ -23,9 +23,9 @@ public class LoginFilter implements Filter {
         }
         HttpSession session = req.getSession();
         UserBean loginUser = (UserBean) session.getAttribute("loginUser");
-        //未登录，拦截跳转到登录页
+        //未登录，拦截跳转到登录页（用绝对路径，避免静态资源被重定向到错误地址）
         if(loginUser == null){
-            resp.sendRedirect("login.jsp");
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
             return;
         }
         //新增，判断后台admin路径权限
@@ -33,7 +33,7 @@ public class LoginFilter implements Filter {
             //访问后台，必须是管理员admin
             if(!"admin".equals(loginUser.getRole())){
                 //普通用户，无权访问后台，跳转到首页
-                resp.sendRedirect("index.jsp");
+                resp.sendRedirect(req.getContextPath() + "/index.jsp");
                 return;
             }
         }

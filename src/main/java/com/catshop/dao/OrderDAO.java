@@ -114,6 +114,28 @@ public class OrderDAO {
         return list;
     }
 
+    /** 查询单条订单（用于订单归属校验） */
+    public OrderBean findById(int orderId) {
+        String sql = "SELECT * FROM orders WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, orderId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return mapOrder(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn, pstmt, rs);
+        }
+        return null;
+    }
+
     /** 查询所有订单（后台管理）  */
     public List<OrderBean> findAll() {
         //订单表o  左连接 用户表u。取出username，即使用户被删除，订单记录依然查得到

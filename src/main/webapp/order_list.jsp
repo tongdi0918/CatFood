@@ -1,6 +1,7 @@
 <%--    http://localhost:8080/catFood_war_exploded/page/order_list.jsp      --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isELIgnored="false" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.catshop.javabean.OrderBean" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -17,7 +18,7 @@
     if (orders == null || orders.isEmpty()) {
 %>
 <div class="card" style="text-align:center;padding:60px;color:#999;">
-    暂无订单，<a href="${pageContext.request.contextPath}/products">去选购吧~</a>
+    暂无订单，<a href="${pageContext.request.contextPath}/ProductListServlet">去选购吧~</a>
 </div>
 <% }else{ %>
     <% for (OrderBean order : orders) { %>
