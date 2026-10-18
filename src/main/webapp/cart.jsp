@@ -65,7 +65,7 @@
                                 <td>¥ <fmt:formatNumber value="${item.product.price}" pattern="0.00"/></td>
                                 <td class="cart-qty">
                                     <button type="button" class="qty-minus">-</button>
-                                    <input type="text" class="qty-value" value="${item.quantity}" inputmode="numeric">
+                                    <input type="number" class="qty-value" value="${item.quantity}" min="1" max="${item.product.stock}" step="1">
                                     <button type="button" class="qty-plus">+</button>
                                 </td>
                                 <td class="qty-subtotal">¥ <fmt:formatNumber value="${item.subtotal}" pattern="0.00"/></td>
