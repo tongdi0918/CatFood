@@ -52,6 +52,7 @@
 
     function removeItem(tr, pid) {
         if (submitting) return; // 防止重复点击
+        if (!confirm('确定要删除这个商品吗？')) return;
         submitting = true;
         var url = ctx + '/cart?action=remove&pid=' + encodeURIComponent(pid);
         fetch(url, { method: 'POST' })
