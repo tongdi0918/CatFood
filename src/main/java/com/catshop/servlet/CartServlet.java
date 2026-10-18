@@ -394,7 +394,7 @@ public class CartServlet extends HttpServlet {
         }
     }
 
-    /** 查看购物车时刷新每件商品的最新库存与上下架状态（快照数据可能过期） */
+    /** 查看购物车时刷新每件商品的最新价格、库存与上下架状态（快照数据可能过期） */
     private void refreshCartInfo(List<CartItem> cart) {
         ProductDAO productDAO = new ProductDAO();
         for (CartItem item : cart) {
@@ -402,6 +402,9 @@ public class CartServlet extends HttpServlet {
             if (p == null) {
                 item.getProduct().setStatus(0); // 商品已不存在，标记为下架
                 continue;
+            }
+            if (p.getPrice() != null) {
+                item.getProduct().setPrice(p.getPrice()); // 刷新最新价格，保证小计/总价准确
             }
             if (p.getStock() != null) {
                 item.getProduct().setStock(p.getStock());
