@@ -7,6 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>我的购物车 - 喵鲜猫粮商城</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cart.css">
 </head>
 <body data-context-path="${pageContext.request.contextPath}">
 
