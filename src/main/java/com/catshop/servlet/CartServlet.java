@@ -374,6 +374,9 @@ public class CartServlet extends HttpServlet {
             boolean ok = new OrderDAO().createOrder(order, items);
             if (ok) {
                 session.removeAttribute("cart");
+                // 保存订单摘要到 Session，供成功页展示
+                session.setAttribute("lastOrderNo", order.getOrderNo());
+                session.setAttribute("lastOrderAmount", order.getTotalAmount());
                 response.sendRedirect(request.getContextPath() + "/order_success.jsp");
             } else {
                 echoForm(request, receiver, phone, address);

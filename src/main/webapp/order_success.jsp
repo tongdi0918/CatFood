@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +25,12 @@
 </header>
 
 <main>
+    <c:if test="${not empty sessionScope.lastOrderNo}">
+        <div class="order-summary">
+            <p>订单号：<strong>${sessionScope.lastOrderNo}</strong></p>
+            <p>订单金额：¥ <strong><fmt:formatNumber value="${sessionScope.lastOrderAmount}" pattern="0.00"/></strong></p>
+        </div>
+    </c:if>
     <p>您的订单已提交成功，感谢购买！</p>
     <a href="${pageContext.request.contextPath}/ProductListServlet">继续购物</a>
 </main>
