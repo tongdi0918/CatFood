@@ -198,7 +198,7 @@
             %>
            <div class="nav-links">
                <a href="index.jsp">首页</a>
-               <a href="productList.jsp">全部商品</a>
+               <a href="product_list.jsp">全部商品</a>
                <a href="userinfo.jsp">个人中心</a>
                <%
                    if(loginUser != null && "admin".equals(loginUser.getRole())){
@@ -207,7 +207,7 @@
                <%
                    }
                %>
-               <a href="LogoutServlet">退出登录</a>
+               <a href="UserLogoutServlet">退出登录</a>
            </div>
         </div>
         <!-- 顶部横幅 -->
@@ -215,14 +215,14 @@
             <div class="banner-content">
                 <h1>喵鲜猫粮商城</h1>
                 <p>专为猫咪准备的优质猫粮，科学配方，健康好粮</p>
-                <a href="productList.jsp" class="btn-primary">进入商品商城</a>
+                <a href="product_list.jsp" class="btn-primary">进入商品商城</a>
             </div>
         </div>
         <!-- 首页功能入口 -->
         <div class="section">
             <h2 class="section-title">商城入口</h2>
             <div class="feature-grid">
-                <a href="productList.jsp" class="feature-item">
+                <a href="product_list.jsp" class="feature-item">
                     <div class="feature-icon">🛒</div>
                     <h3>全部商品</h3>
                     <p>浏览猫粮商品</p>
@@ -232,7 +232,7 @@
                     <h3>个人中心</h3>
                     <p>查看个人信息</p>
                 </a>
-                <a href="orderServlet" class="feature-item">
+                <a href="order_Servlet" class="feature-item">
                     <div class="feature-icon">📦</div>
                     <h3>我的订单</h3>
                     <p>管理订单记录</p>

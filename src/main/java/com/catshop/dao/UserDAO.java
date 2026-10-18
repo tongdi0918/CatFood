@@ -60,7 +60,6 @@ public class UserDAO {
         }
     }
 
-
     // ========== 下面是新增的4个方法 ==========
     // 根据用户名查询单个用户（个人中心）
     public UserBean findUserByUsername(String username){
@@ -90,7 +89,7 @@ public class UserDAO {
         }
         return user;
     }
-    // 更新个人资料：姓名、手机号
+    // 普通用户更新个人资料：姓名、手机号
     public boolean updateUserInfo(UserBean user){
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -160,27 +159,8 @@ public class UserDAO {
             DBUtil.close(conn,pstmt);
         }
     }
-    // 更新用户信息-普通用户
-    public boolean updateUser(UserBean user){
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        String sql = "UPDATE user SET name=?, phone=? WHERE id=?";
-        try{
-            conn = DBUtil.getConnection();
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, user.getName());
-            pstmt.setString(2, user.getPhone());
-            pstmt.setInt(3, user.getId());
-            int row = pstmt.executeUpdate();
-            return row > 0;
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }finally {
-            DBUtil.close(conn,pstmt,null);
-        }
-    }
-    //编辑用户
+
+    //编辑用户-管理员
     public UserBean findById(int id){
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -208,6 +188,7 @@ public class UserDAO {
         }
         return user;
     }
+
     public boolean update(UserBean user){
         Connection conn = null;
         PreparedStatement pstmt = null;
