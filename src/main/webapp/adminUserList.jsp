@@ -60,10 +60,13 @@
             text-decoration:none;
             margin:0 6px;
         }
-        a:first-of-type{
+        .edit{
             color:#28a745;
         }
-        a:last-of-type{
+        .reset{
+            color:#ff9900;
+        }
+        .del{
             color:#dc3545;
         }
     </style>
@@ -96,8 +99,9 @@
             <td><%=phone%></td>
             <td><%=u.getRole()%></td>
             <td>
-                <a href="editUser.jsp?id=<%=u.getId()%>">修改</a>
-                <a href="DeleteUserServlet?id=<%=u.getId()%>" onclick="return confirm('确定删除该用户？')">删除</a>
+                <a class="edit" href="editUser.jsp?id=<%=u.getId()%>">修改</a>
+                <a class="reset" href="ResetPwdServlet?id=<%=u.getId()%>" onclick="return confirm('确定重置该用户密码为 123456？')">重置密码</a>
+                <a class="del" href="DeleteUserServlet?id=<%=u.getId()%>" onclick="return confirm('确定删除该用户？')">删除</a>
             </td>
         </tr>
         <%
