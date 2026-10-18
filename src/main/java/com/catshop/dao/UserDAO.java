@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.SQLException;
 
 public class UserDAO {
 
@@ -59,8 +60,7 @@ public class UserDAO {
         }
     }
 
-
-    // ========== 下面是我们新增的4个方法 ==========
+    // ========== 下面是新增的4个方法 ==========
     // 根据用户名查询单个用户（个人中心）
     public UserBean findUserByUsername(String username){
         Connection conn = null;
@@ -89,7 +89,7 @@ public class UserDAO {
         }
         return user;
     }
-    // 更新个人资料：姓名、手机号
+    // 普通用户更新个人资料：姓名、手机号
     public boolean updateUserInfo(UserBean user){
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -100,25 +100,6 @@ public class UserDAO {
             pstmt.setString(1,user.getName());
             pstmt.setString(2,user.getPhone());
             pstmt.setInt(3,user.getId());
-            int row = pstmt.executeUpdate();
-            return row>0;
-        }catch(Exception e){
-            e.printStackTrace();
-            return false;
-        }finally{
-            DBUtil.close(conn,pstmt);
-        }
-    }
-    // 修改密码
-    public boolean updatePassword(Integer id,String newPwd){
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        String sql = "update `user` set password=? where id=?";
-        try{
-            conn = DBUtil.getConnection();
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,newPwd);
-            pstmt.setInt(2,id);
             int row = pstmt.executeUpdate();
             return row>0;
         }catch(Exception e){
@@ -178,27 +159,8 @@ public class UserDAO {
             DBUtil.close(conn,pstmt);
         }
     }
-    // 更新用户信息-普通用户
-    public boolean updateUser(UserBean user){
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        String sql = "UPDATE user SET name=?, phone=? WHERE id=?";
-        try{
-            conn = DBUtil.getConnection();
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, user.getName());
-            pstmt.setString(2, user.getPhone());
-            pstmt.setInt(3, user.getId());
-            int row = pstmt.executeUpdate();
-            return row > 0;
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }finally {
-            DBUtil.close(conn,pstmt,null);
-        }
-    }
-    //编辑用户
+
+    //编辑用户-管理员
     public UserBean findById(int id){
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -226,6 +188,7 @@ public class UserDAO {
         }
         return user;
     }
+
     public boolean update(UserBean user){
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -263,6 +226,23 @@ public class UserDAO {
             return false;
         }finally{
             DBUtil.close(conn,pstmt);
+        }
+    }
+    // 重置用户密码
+    public void resetPassword(int id,String newPwd){
+        Connection conn = null;
+        PreparedStatement pst = null;
+        try{
+            conn = DBUtil.getConnection();
+            String sql = "update user set password=? where id=?";
+            pst = conn.prepareStatement(sql);
+            pst.setString(1,newPwd);
+            pst.setInt(2,id);
+            pst.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally{
+            DBUtil.close(conn,pst);
         }
     }
 }
