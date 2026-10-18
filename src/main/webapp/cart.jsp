@@ -77,6 +77,7 @@
                 <div class="cart-actions">
                     <button type="button" id="cart-clear">清空购物车</button>
                 </div>
+                <div id="cart-feedback"></div>
                 <c:if test="${not empty error}">
                     <div class="cart-error">${error}</div>
                 </c:if>

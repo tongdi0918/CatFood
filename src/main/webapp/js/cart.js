@@ -17,6 +17,18 @@
         return n;
     }
 
+    // 在页面显示短暂的反馈提示
+    function showFeedback(msg) {
+        var box = document.getElementById('cart-feedback');
+        if (!box) return;
+        box.textContent = msg;
+        box.style.display = 'block';
+        if (window.feedbackTimer) clearTimeout(window.feedbackTimer);
+        window.feedbackTimer = setTimeout(function () {
+            box.style.display = 'none';
+        }, 1500);
+    }
+
     function updateQuantity(tr, pid, quantity) {
         if (submitting) return;   // 避免重复提交
         if (quantity < 1) return; // 非法数量，不发起请求
@@ -37,6 +49,7 @@
                     tr.querySelector('.qty-value').value = data.quantity;
                     tr.querySelector('.qty-subtotal').textContent = '¥ ' + fmt(data.subtotal);
                     document.getElementById('cart-total').textContent = '¥ ' + fmt(data.total);
+                    showFeedback('数量已更新');
                 } else {
                     // 展示服务端错误信息；数量保持不变（即恢复原数量）
                     alert(data.msg || '操作失败');
@@ -60,6 +73,7 @@
             .then(function (data) {
                 if (data.code === 0) {
                     tr.remove();
+                    showFeedback('商品已删除');
                     var remaining = document.querySelectorAll('.cart-table tbody tr').length;
                     if (remaining === 0) {
                         location.reload(); // 空购物车 → 重新渲染服务端空态
