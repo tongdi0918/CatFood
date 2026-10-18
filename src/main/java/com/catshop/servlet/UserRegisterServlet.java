@@ -11,7 +11,10 @@ import java.io.IOException;
 @WebServlet("/UserRegisterServlet")
 public class UserRegisterServlet extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         System.out.println("收到注册：username="+username + " password="+password);
