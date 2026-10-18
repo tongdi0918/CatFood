@@ -7,6 +7,16 @@
         return Number(n).toFixed(2);
     }
 
+    // 校验数量输入：必须是大于 0 的整数，否则返回 null
+    function parseQuantity(value) {
+        var text = String(value).trim();
+        var n = Number(text);
+        if (text === '' || isNaN(n) || Math.floor(n) !== n || n < 1) {
+            return null;
+        }
+        return n;
+    }
+
     function updateQuantity(tr, pid, quantity) {
         if (submitting) return;   // 避免重复提交
         if (quantity < 1) return; // 非法数量，不发起请求
@@ -24,7 +34,7 @@
             .then(function (resp) { return resp.json(); })
             .then(function (data) {
                 if (data.code === 0) {
-                    tr.querySelector('.qty-value').textContent = data.quantity;
+                    tr.querySelector('.qty-value').value = data.quantity;
                     tr.querySelector('.qty-subtotal').textContent = '¥ ' + fmt(data.subtotal);
                     document.getElementById('cart-total').textContent = '¥ ' + fmt(data.total);
                 } else {
@@ -92,14 +102,33 @@
     var rows = document.querySelectorAll('.cart-table tbody tr');
     rows.forEach(function (tr) {
         var pid = tr.getAttribute('data-pid');
+        var qtyInput = tr.querySelector('.qty-value');
+
         tr.querySelector('.qty-minus').addEventListener('click', function () {
-            var cur = parseInt(tr.querySelector('.qty-value').textContent, 10);
+            var cur = parseQuantity(qtyInput.value);
+            if (cur === null) { alert('数量无效'); return; }
             updateQuantity(tr, pid, cur - 1);
         });
         tr.querySelector('.qty-plus').addEventListener('click', function () {
-            var cur = parseInt(tr.querySelector('.qty-value').textContent, 10);
+            var cur = parseQuantity(qtyInput.value);
+            if (cur === null) { alert('数量无效'); return; }
             updateQuantity(tr, pid, cur + 1);
         });
+
+        // 直接输入数量：记录上次有效值，非法输入时恢复并提示
+        qtyInput.addEventListener('focus', function () {
+            qtyInput.setAttribute('data-prev', qtyInput.value);
+        });
+        qtyInput.addEventListener('change', function () {
+            var qty = parseQuantity(qtyInput.value);
+            if (qty === null) {
+                alert('请输入大于 0 的整数数量');
+                qtyInput.value = qtyInput.getAttribute('data-prev');
+                return;
+            }
+            updateQuantity(tr, pid, qty);
+        });
+
         tr.querySelector('.qty-remove').addEventListener('click', function () {
             removeItem(tr, pid);
         });
