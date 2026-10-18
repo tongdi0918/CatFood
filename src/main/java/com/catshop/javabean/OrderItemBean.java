@@ -9,6 +9,7 @@ public class OrderItemBean {
     private String productName;
     private BigDecimal price;
     private int quantity;       //购买数量
+    private String productImage;    //商品图片（联查 product 表，展示订单详情用）
 
 
     public OrderItemBean() {}       //无参构造
@@ -26,8 +27,11 @@ public class OrderItemBean {
     public void setPrice(BigDecimal price) { this.price = price; }
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
+    public String getProductImage() { return productImage; }
+    public void setProductImage(String productImage) { this.productImage = productImage; }
 
-    /* 总价 = 单价 × 数量  */
-    public BigDecimal getSubtotal() {  return price.multiply(new BigDecimal(quantity));
+
+    public BigDecimal getSubtotal() {   /* 总价 = 单价 × 数量  */
+        return price.multiply(new BigDecimal(quantity));
     }
 }

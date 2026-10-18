@@ -1,9 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--@elvariable id="product" type="com.catshop.javabean.Product"--%>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>商品详情 - 喵鲜猫粮商城</title>
+    <title>商品详情_喵鲜猫粮商城</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/productDetail.css">
 </head>
 <body data-context-path="${pageContext.request.contextPath}">
@@ -13,14 +15,24 @@
     <div class="nav-links">
         <a href="index.jsp">首页</a>
         <a href="ProductListServlet">全部商品</a>
-        <a href="${pageContext.request.contextPath}/cart">购物车<span id="cart-count" style="display:none;background:#fff;color:#d46b29;border-radius:10px;padding:0 6px;margin-left:4px;font-size:12px;"></span></a>
-        <a href="#">个人中心</a>
+        <a href="cart">购物车</a>
+        <a href="userinfo.jsp">个人中心</a>
     </div>
 </nav>
 
+<c:if test="${empty product}">
+    <section class="detail-container">
+        <p style="text-align:center; padding:60px 0; font-size:18px; color:#777;">商品不存在或已删除，请返回商品列表重新选择。</p>
+        <p style="text-align:center;">
+            <a href="ProductListServlet" class="back-link">返回商品列表</a>
+        </p>
+    </section>
+</c:if>
+
+<c:if test="${not empty product}">
 <section class="detail-container">
     <div class="detail-img">
-        <img src="${pageContext.request.contextPath}/${product.image}" alt="${product.pname}">
+        <img src="${pageContext.request.contextPath}${product.image}" alt="${product.pname}">
     </div>
 
     <div class="detail-info">
@@ -41,21 +53,39 @@
         </div>
 
         <div class="detail-buttons">
-            <a href="#" class="btn-primary" onclick="addToCart(${product.pid}); return false;">加入购物车</a>
-            <a href="#" class="btn-secondary">立即购买</a>
+            <a href="javascript:void(0)" class="btn-primary" id="btn-add-cart" data-pid="${product.pid}">加入购物车</a>
+            <a href="javascript:void(0)" class="btn-secondary" id="btn-buy-now" data-pid="${product.pid}">立即购买</a>
         </div>
 
         <a href="ProductListServlet" class="back-link">返回商品列表</a>
     </div>
 </section>
+</c:if>
 
 <footer>
-    <p>&copy;202610喵鲜猫粮商城 | 第三小组课程项目 版权所有</p>
+    <p>&copy; 202610喵鲜猫粮商城of第三小组课程项目</p>
 </footer>
 
 <script src="${pageContext.request.contextPath}/js/cart.js"></script>
 <script>
-    window.refreshCartCount && window.refreshCartCount();
+    // 商品详情页：加入购物车 / 立即购买（AJAX 加购，成功后立即购买跳转购物车结算）
+    (function () {
+        var addBtn = document.getElementById('btn-add-cart');
+        if (addBtn) {
+            addBtn.addEventListener('click', function () {
+                window.addToCart(addBtn.getAttribute('data-pid'), 1);
+            });
+        }
+        var buyBtn = document.getElementById('btn-buy-now');
+        if (buyBtn) {
+            buyBtn.addEventListener('click', function () {
+                window.addToCart(buyBtn.getAttribute('data-pid'), 1, function () {
+                    window.location.href = 'cart';
+                });
+            });
+        }
+    })();
 </script>
+
 </body>
 </html>

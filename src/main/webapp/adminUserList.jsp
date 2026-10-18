@@ -4,7 +4,7 @@
 <%@ page import="com.catshop.javabean.UserBean" %>
 
 <%
-    // ==========页面顶部权限拦截，只在这里定义一次loginUser==========
+    // 权限拦截
     UserBean loginUser = (UserBean)session.getAttribute("loginUser");
     if(loginUser == null || !"admin".equals(loginUser.getRole())){
         response.sendRedirect("index.jsp");
@@ -14,7 +14,7 @@
 
 <html>
 <head>
-    <title>管理员用户管理</title>
+    <title>管理用户</title>
     <style>
         *{
             margin: 0;
@@ -29,7 +29,7 @@
         .container{
             width: 90%;
             margin: 0 auto;
-            background-color: #ffffff;
+            background-color: #eda6a6;
             padding:30px;
             border-radius: 10px;
             box-shadow: 0 2px 10px #00000018;
@@ -74,6 +74,11 @@
 <body>
 <div class="container">
     <h3>管理员用户管理</h3>
+    <div style="margin-bottom:52px; font-size:19px;">
+        <a href="AdminOrderServlet?action=list" style="color:#4080ff; text-decoration:none; margin-right:14px;">订单管理</a>
+        <a href="AdminProductServlet?action=list" style="color:#4080ff; text-decoration:none; margin-right:14px;">商品管理</a>
+        <a href="index.jsp" style="color:#4080ff; text-decoration:none;">返回首页</a>
+    </div>
     <%
         UserDAO userDAO = new UserDAO();
         List<UserBean> userList = userDAO.findAllUser();

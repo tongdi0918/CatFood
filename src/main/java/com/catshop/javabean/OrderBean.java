@@ -1,8 +1,5 @@
 
-/*订单表
-id,orderNo,userId,totalAmount,receiver,phone,address,status,createTime,payTime
- */
-
+/*订单表id,orderNo,userId,totalAmount,receiver,phone,address,status,createTime,payTime */
 package com.catshop.javabean;
 
 import java.math.BigDecimal;    //高精度小数,避免精度丢失
@@ -10,9 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 
-/**
- * 订单实体类
- */
 public class OrderBean {
     private int id;     //主键 id
     private String orderNo;     //业务唯一单号

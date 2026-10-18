@@ -13,9 +13,8 @@ public class UserLogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        //销毁session，清空登录用户
+        //销毁session，清空登录用户，跳转到登录页面
         session.invalidate();
-        //退出后跳转到登录页面
         response.sendRedirect("login.jsp");
     }
 

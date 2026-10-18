@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ProductDAO {
 
-    //1 查询【前台】所有上架商品 status=1
+    //1 查询所有上架商品 status=1
     public List<Product> findAllOnSale() {
         List<Product> list = new ArrayList<>();
         Connection conn = null;
@@ -312,6 +312,17 @@ public class ProductDAO {
         pstmt.setInt(1, quantity);
         pstmt.setInt(2, productId);
         pstmt.setInt(3, quantity);
+        int rows = pstmt.executeUpdate();
+        pstmt.close();
+        return rows;
+    }
+
+    // 取消订单时恢复库存（在 OrderDAO 的事务内调用）
+    public int increaseStock(Connection conn, int productId, int quantity) throws SQLException {
+        String sql = "UPDATE product SET stock = stock + ? WHERE pid = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, quantity);
+        pstmt.setInt(2, productId);
         int rows = pstmt.executeUpdate();
         pstmt.close();
         return rows;

@@ -4,12 +4,9 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import java.io.IOException;
 
-/**
- * 统一字符编码过滤器
- */
+
 @WebFilter("/*")
 public class EncodingFilter implements Filter {
-
     private String encoding = "UTF-8";
 
     @Override
@@ -25,7 +22,6 @@ public class EncodingFilter implements Filter {
             throws IOException, ServletException {
         request.setCharacterEncoding(encoding);
         response.setCharacterEncoding(encoding);
-        response.setContentType("text/html;charset=" + encoding);
         chain.doFilter(request, response);
     }
 

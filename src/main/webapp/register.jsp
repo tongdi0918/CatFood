@@ -99,6 +99,20 @@
     <%
         }
     %>
+    <%
+        if("exists".equals(msg) ){
+    %>
+    <script>alert("该用户名已被注册，请更换用户名~")</script>
+    <%
+        }
+    %>
+    <%
+        if("empty".equals(msg) ){
+    %>
+    <script>alert("用户名和密码不能为空，请完整填写~")</script>
+    <%
+        }
+    %>
 </div>
 <div class="container">
     <h3>用户注册</h3>

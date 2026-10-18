@@ -9,7 +9,7 @@
     ${editProduct==null?"新增商品":"编辑商品"}
 </h2>
 
-<form action="AdminProductServlet" method="post">
+<form action="${pageContext.request.contextPath}/AdminProductServlet" method="post">
     <c:if test="${editProduct != null}">
         <input type="hidden" name="action" value="saveEdit">
         <input type="hidden" name="pid" value="${editProduct.pid}">
@@ -61,6 +61,6 @@
         </tr>
     </table>
 </form>
-<a href="AdminProductServlet?action=list">返回商品列表</a>
+<a href="${pageContext.request.contextPath}/AdminProductServlet?action=list">返回商品列表</a>
 </body>
 </html>

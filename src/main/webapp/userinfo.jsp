@@ -63,19 +63,19 @@
                 return;
             }
             // null处理，如果字段为空就变成空字符串
-            //String name = user.getName() == null ? "" : user.getName();
-            //String phone = user.getPhone() == null ? "" : user.getPhone();
+            String name = user.getName() == null ? "" : user.getName();
+            String phone = user.getPhone() == null ? "" : user.getPhone();
         %>
         <div class="item">ID：<%=user.getId()%></div>
         <div class="item">用户名：<%=user.getUsername()%></div>
-        <div class="item">姓名：<%=user.getName()%></div>
-        <div class="item">手机号：<%=user.getPhone()%></div>
+        <div class="item">姓名：<%=name%></div>
+        <div class="item">手机号：<%=phone%></div>
         <div class="item">角色：<%=user.getRole()%></div>
 
         <div class="btn-group">
             <button onclick="location.href='index.jsp'">首页</button>
             <button onclick="location.href='updateUserInfo.jsp'">修改个人资料</button>
-            <button onclick="location.href='UserLogoutServlet'">退出登录</button>
+            <button onclick="location.href='LogoutServlet'">退出登录</button>
             <%
                 if("admin".equals(user.getRole())){
             %>

@@ -1,5 +1,6 @@
 package com.catshop.servlet;
 
+import com.catshop.dao.ProductDAO;
 import com.catshop.javabean.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,10 +8,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 @WebServlet("/ProductDetailServlet")
 public class ProductDetailServlet extends HttpServlet {
@@ -33,39 +30,15 @@ public class ProductDetailServlet extends HttpServlet {
             response.getWriter().write("错误：pid必须是数字！");
             return;
         }
-        // ======================================================
 
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        Product product = null;
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            // 【重点！这里改成你真实数据库名、账号、密码】
-            String url = "jdbc:mysql://localhost:3306/catshop?useSSL=false&serverTimezone=UTC";
-            conn = DriverManager.getConnection(url,"root","mysql8");
 
-            String sql = "select pid,pname,price,category,stock,image,description,status from product where pid=?";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, pid);
-            rs = pstmt.executeQuery();
-            if(rs.next()){
-                product = new Product();
-                product.setPid(rs.getInt("pid"));
-                product.setPname(rs.getString("pname"));
-                product.setPrice(rs.getDouble("price"));
-                product.setCategory(rs.getString("category"));
-                product.setStock(rs.getInt("stock"));
-                product.setImage(rs.getString("image"));
-                product.setDescription(rs.getString("description"));
-                product.setStatus(rs.getInt("status"));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            try{if(rs!=null) rs.close();}catch (Exception e){}
-            try{if(pstmt!=null) pstmt.close();}catch (Exception e){}
-            try{if(conn!=null) conn.close();}catch (Exception e){}
+        Product product = new ProductDAO().findById(pid);
+
+        // 查无此商品：转发回商品列表并提示，而不是渲染空详情页
+        if (product == null) {
+            request.setAttribute("msg", "商品不存在或已删除，请重新选择商品");
+            request.getRequestDispatcher("/ProductListServlet").forward(request, response);
+            return;
         }
 
         //把商品对象传到页面

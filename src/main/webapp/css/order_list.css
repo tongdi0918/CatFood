@@ -1,16 +1,36 @@
 *{
     background-color: bisque;
 }
+a{
+    text-decoration: none;
+}
+
+
+.logo{
+    font-size: 24px;
+    color: #e67e22;
+}
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
 
 .card{
     font-size: 20px;
 }
 .btn-default{
     background-color: aqua;
+
 }
 .btn-primary{
     background-color: coral;
 }
 .btn-danger{
-    background-color: darkkhaki;
+    background-color: #ea4646;
 }

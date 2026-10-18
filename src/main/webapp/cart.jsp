@@ -2,11 +2,12 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>我的购物车 - 喵鲜猫粮商城</title>
+    <title>我的购物车_喵鲜猫粮商城</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cart.css">
 </head>
 <body data-context-path="${pageContext.request.contextPath}">
@@ -17,7 +18,7 @@
         <a href="${pageContext.request.contextPath}/index.jsp">首页</a>
         <a href="${pageContext.request.contextPath}/ProductListServlet">全部商品</a>
         <a href="${pageContext.request.contextPath}/cart">购物车</a>
-        <a href="#">个人中心</a>
+        <a href="${pageContext.request.contextPath}/userinfo.jsp">个人中心</a>
     </div>
 </nav>
 
@@ -90,15 +91,15 @@
                         <input type="hidden" name="action" value="submit">
                         <p>
                             <label>收货人：</label>
-                            <input type="text" name="receiver" value="${receiver}" required>
+                            <input type="text" name="receiver" value="${empty receiver ? sessionScope.loginUser.name : receiver}" required>
                         </p>
                         <p>
                             <label>联系电话：</label>
-                            <input type="text" name="phone" value="${phone}" maxlength="11" placeholder="请输入11位手机号" required>
+                            <input type="text" name="phone" value="${empty phone ? sessionScope.loginUser.phone : phone}" maxlength="11" placeholder="请输入11位手机号" required>
                         </p>
                         <p>
                             <label>收货地址：</label>
-                            <input type="text" name="address" value="${address}" required>
+                            <input type="text" name="address" value="${empty address ? sessionScope.loginUser.address : address}" required>
                         </p>
                         <button type="submit" id="checkout-submit">提交订单</button>
                     </form>

@@ -16,7 +16,7 @@
 ```
 CatFood/
 ├── sql/
-│   └── catfood.sql              # 数据库建表脚本 + 测试数据
+│   └── catshop.sql              # 数据库建表脚本 + 测试数据
 └──  src/main
         │   └── java/com/catfood/
         │                   ├── javabean/               # JavaBean 实体层

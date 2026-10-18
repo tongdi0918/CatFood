@@ -22,7 +22,8 @@ public class UserLoginServlet extends HttpServlet {
 
         if(user != null){
             HttpSession session = request.getSession();
-            session.setAttribute("loginUser",user);
+            session.setAttribute("loginUserId", user.getId() );
+            session.setAttribute("loginUser", user);
             response.sendRedirect("index.jsp?loginmsg=loginsuccess");
         }else{
             response.sendRedirect("login.jsp?loginmsg=loginfail");

@@ -18,8 +18,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 购物车 Servlet
+/**购物车 Servlet
  * 支持 action: view（默认）/ update / remove / clear / submit
  */
 @WebServlet("/cart")
@@ -32,6 +31,7 @@ public class CartServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
 
         // 防御性登录校验：未登录跳转登录页（LoginFilter 已拦截，此处双保险）

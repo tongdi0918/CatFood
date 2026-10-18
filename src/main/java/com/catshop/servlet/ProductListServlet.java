@@ -29,11 +29,11 @@ public class ProductListServlet extends HttpServlet {
         String category = request.getParameter("category");
         String keyword = request.getParameter("keyword");
 
-//2. 调用组合查询
+        //2. 调用组合查询
         ProductDAO productDAO = new ProductDAO();
         List<Product> productList = productDAO.findByCondition(category,keyword);
 
-//3. 传到页面
+        //3. 传到页面
         //把分类和关键词传到request，用于页面表单回显
         request.setAttribute("category", category);
         request.setAttribute("keyword", keyword);

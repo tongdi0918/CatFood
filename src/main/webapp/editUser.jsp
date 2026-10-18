@@ -1,13 +1,17 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: 38532
-  Date: 2026/10/18
-  Time: 11:19
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.catshop.javabean.UserBean" %>
 <%@ page import="com.catshop.dao.UserDAO" %>
+
+<%
+    // 权限拦截
+    UserBean loginUser = (UserBean)session.getAttribute("loginUser");
+    if(loginUser == null || !"admin".equals(loginUser.getRole())){
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
+
 <html>
 <head>
     <title>编辑用户</title>

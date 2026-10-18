@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBUtil {
-    // 改成你自己数据库账号密码
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String URL = "jdbc:mysql://localhost:3306/catshop?useSSL=false&serverTimezone=Asia/Shanghai";
     private static final String USER = "root";
@@ -21,12 +20,11 @@ public class DBUtil {
         }
     }
 
-    // 获取连接（OrderDAO中调用）
+    // 获取连接
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PWD);
     }
-
-    // 重载关闭资源方法，和你OrderDAO代码匹配
+    // 重载关闭资源方法
     public static void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
         try {
             if (rs != null) rs.close();

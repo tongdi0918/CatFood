@@ -69,8 +69,9 @@
                 response.sendRedirect("login.jsp");
                 return;
             }
-//            String name = user.getName();
-//            String phone = user.getPhone();
+            // null 处理：字段为空时显示空字符串，而不是 "null"
+            String name = user.getName() == null ? "" : user.getName();
+            String phone = user.getPhone() == null ? "" : user.getPhone();
         %>
         <form action="UpdateUserInfoServlet" method="post">
             <div class="item">
@@ -79,11 +80,11 @@
             </div>
             <div class="item">
                 姓名：
-                <input type="text" name="name" value="<%=user.getName()%>">
+                <input type="text" name="name" value="<%=name%>">
             </div>
             <div class="item">
                 手机号：
-                <input type="text" name="phone" value="<%=user.getPhone()%>">
+                <input type="text" name="phone" value="<%=phone%>">
             </div>
             <button type="submit">保存修改</button>
         </form>

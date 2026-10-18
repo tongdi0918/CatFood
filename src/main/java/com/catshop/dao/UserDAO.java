@@ -28,6 +28,9 @@ public class UserDAO {
                 user.setId(rs.getInt("id"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
+                user.setName(rs.getString("name"));
+                user.setPhone(rs.getString("phone"));
+                user.setAddress(rs.getString("address"));
                 user.setRole(rs.getString("role"));
             }
         } catch (Exception e) {
@@ -80,6 +83,7 @@ public class UserDAO {
                 user.setPassword(rs.getString("password"));
                 user.setName(rs.getString("name"));
                 user.setPhone(rs.getString("phone"));
+                user.setAddress(rs.getString("address"));
                 user.setRole(rs.getString("role"));
             }
         }catch(Exception e){
@@ -127,6 +131,7 @@ public class UserDAO {
                 user.setPassword(rs.getString("password"));
                 user.setName(rs.getString("name"));
                 user.setPhone(rs.getString("phone"));
+                user.setAddress(rs.getString("address"));
                 user.setRole(rs.getString("role"));
                 list.add(user);
             }
@@ -179,6 +184,7 @@ public class UserDAO {
                 user.setPassword(rs.getString("password"));
                 user.setName(rs.getString("name"));
                 user.setPhone(rs.getString("phone"));
+                user.setAddress(rs.getString("address"));
                 user.setRole(rs.getString("role"));
             }
         }catch(Exception e){

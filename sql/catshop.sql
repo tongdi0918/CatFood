@@ -1,11 +1,7 @@
--- ============================================
+
 -- catshop 一键建库 + 建表 + 初始化数据脚本
 -- 使用方法（命令行）：
---   mysql -uroot -pmysql8 --default-character-set=utf8mb4 < catshop.sql
--- 或在 Navicat / IDEA 中直接运行本文件
--- 可重复执行，不会报错
-
--- mysql -uroot -pmysql8
+-- mysql -uroot -pmysql8 --default-character-set=utf8mb4 catshop
 
 -- ============================================
 
@@ -15,8 +11,8 @@ CREATE DATABASE IF NOT EXISTS `catshop` DEFAULT CHARACTER SET utf8mb4 COLLATE ut
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-USE catshop;
 
+USE catshop;
 DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product`  (
   `pid` int NOT NULL AUTO_INCREMENT COMMENT '商品id',
@@ -29,7 +25,6 @@ CREATE TABLE `product`  (
   `status` int NULL DEFAULT NULL COMMENT '1上架，0下架',
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
 
 USE `catshop`;
 INSERT INTO product(pid,pname,price,category,stock,image,description,status) VALUES
@@ -45,16 +40,18 @@ INSERT INTO product(pid,pname,price,category,stock,image,description,status) VAL
 SET FOREIGN_KEY_CHECKS = 1;
 
 
+
+
 USE `catshop`;
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
     `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户ID',
     `username`    VARCHAR(50)  NOT NULL COMMENT '用户名',
     `password`    VARCHAR(100) NOT NULL COMMENT '密码',
-    `name`    VARCHAR(50)  NULL COMMENT '姓名',
+    `name`        VARCHAR(50)  NULL COMMENT '姓名',
     `email`       VARCHAR(100) DEFAULT NULL COMMENT '邮箱',
     `phone`       VARCHAR(20)  DEFAULT NULL COMMENT '手机号',
-    `address`     VARCHAR(255) DEFAULT NULL COMMENT '收货地址',
+    `address`     VARCHAR(555) DEFAULT NULL COMMENT '收货地址',
     `role`        VARCHAR(20)  NOT NULL DEFAULT 'user' COMMENT '普通用户or管理员',
     `create_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
     PRIMARY KEY (`id`),
@@ -62,12 +59,12 @@ CREATE TABLE `user` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '用户表';
 
 USE `catshop`;
-INSERT INTO `user` (`username`, `password`, `phone`, `address`,`role`) VALUES
-    ('admin', '123456', '13800138000', '四川省宜宾市四川轻化工大学','admin');
+INSERT INTO `user` (`username`, `password`, `phone`, `address`,`role`) VALUE
+    ('admin', '123456', '12345678901', '宜宾市四川轻化工大学','admin');
 
 
 
-
+USE `catshop`;
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
       `id`           INT UNSIGNED    NOT NULL AUTO_INCREMENT COMMENT '订单ID',
@@ -85,6 +82,7 @@ CREATE TABLE `orders` (
       KEY `idx_user_id` (`user_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '订单表';
 
+USE `catshop`;
 DROP TABLE IF EXISTS `order_item`;
 CREATE TABLE `order_item` (
       `id`          INT UNSIGNED   NOT NULL AUTO_INCREMENT COMMENT '明细ID',

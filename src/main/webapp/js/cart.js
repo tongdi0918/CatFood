@@ -1,4 +1,4 @@
-// 购物车前端交互：数量修改 / 移除 / 清空（对应 CartServlet action=update/remove/clear）
+﻿// 购物车前端交互：数量修改 / 移除 / 清空（对应 CartServlet action=update/remove/clear）
 (function () {
     var ctx = document.body.getAttribute('data-context-path') || '';
     var submitting = false; // 防止重复提交
@@ -213,8 +213,9 @@
         });
     }
 
-    // 加购：商品详情页等通过 window.addToCart(pid, quantity) 调用
-    window.addToCart = function (pid, quantity) {
+    // 加购：商品详情页等通过 window.addToCart(pid, quantity, callback) 调用
+    // callback：加购成功后执行（例如“立即购买”跳转购物车）
+    window.addToCart = function (pid, quantity, callback) {
         if (submitting) return; // 防止重复点击
         quantity = quantity || 1;
         submitting = true;
@@ -233,6 +234,9 @@
                 if (data.code === 0) {
                     alert('已加入购物车');
                     window.refreshCartCount && window.refreshCartCount();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
                 } else {
                     alert(data.msg || '加入失败');
                 }

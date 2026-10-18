@@ -40,7 +40,6 @@ public class OrderDAO {
             if (rs.next()) {
                 orderId = rs.getInt(1);
             }
-
             rs.close();
             pstmt.close();
 
@@ -139,9 +138,9 @@ public class OrderDAO {
         return list;
     }
 
-    /** 查询orderId=?的订单明细 */
+    /** 查询orderId=?的订单明细（联查商品图片，展示订单详情用） */
     public List<OrderItemBean> findItemsByOrderId(int orderId) {
-        String sql = "SELECT * FROM order_item WHERE order_id = ?";
+        String sql = "SELECT i.*, p.image AS product_image FROM order_item i LEFT JOIN product p ON i.product_id = p.pid WHERE i.order_id = ?";
         List<OrderItemBean> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -159,6 +158,7 @@ public class OrderDAO {
                 item.setProductName(rs.getString("product_name"));
                 item.setPrice(rs.getBigDecimal("price"));
                 item.setQuantity(rs.getInt("quantity"));    //封装成 OrderItem实体
+                item.setProductImage(rs.getString("product_image"));
                 list.add(item);            //OrderItem实体存入集合
             }
         } catch (SQLException e) {
@@ -169,7 +169,129 @@ public class OrderDAO {
         return list;        //返回集合
     }
 
-    /** 更新订单状态 */
+    /** 查询 orderId=? 的单个订单（后台详情、前台详情校验归属用） */
+    public OrderBean findById(int orderId) {
+        String sql = "SELECT * FROM orders WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, orderId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return mapOrder(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(conn, pstmt, rs);
+        }
+        return null;
+    }
+
+    /** 模拟支付：仅待付款(status=0)订单可支付，支付后记录支付时间 */
+    public boolean pay(int orderId) {
+        String sql = "UPDATE orders SET status = 1, pay_time = NOW() WHERE id = ? AND status = 0";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DBUtil.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, orderId);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            DBUtil.close(conn, pstmt);
+        }
+    }
+
+    /** 取消订单：仅待付款(status=0)订单可取消，事务内恢复商品库存 */
+    public boolean cancel(int orderId) {
+        Connection conn = null;
+        try {
+            conn = DBUtil.getConnection();
+            conn.setAutoCommit(false);
+
+            // 1. 先锁定该订单行，防止并发重复取消
+            PreparedStatement lock = conn.prepareStatement("SELECT status FROM orders WHERE id = ? FOR UPDATE");
+            lock.setInt(1, orderId);
+            ResultSet rs = lock.executeQuery();
+            if (!rs.next()) {
+                rs.close(); lock.close();
+                conn.rollback();
+                return false;   // 订单不存在
+            }
+            int currentStatus = rs.getInt("status");
+            rs.close();
+            lock.close();
+            if (currentStatus != 0) {
+                conn.rollback();
+                return false;   // 仅待付款订单可取消
+            }
+
+            // 2. 读取订单明细，恢复库存
+            ProductDAO productDAO = new ProductDAO();
+            List<OrderItemBean> items = findItemsByOrderIdInTx(conn, orderId);
+            for (OrderItemBean item : items) {
+                productDAO.increaseStock(conn, item.getProductId(), item.getQuantity());
+            }
+
+            // 3. 更新订单状态为已取消
+            PreparedStatement upd = conn.prepareStatement("UPDATE orders SET status = 4 WHERE id = ? AND status = 0");
+            upd.setInt(1, orderId);
+            int rows = upd.executeUpdate();
+            upd.close();
+            if (rows == 0) {
+                conn.rollback();
+                return false;
+            }
+
+            conn.commit();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try { if (conn != null) conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            return false;
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /** 在指定事务连接内查询订单明细（供 cancel 使用） */
+    private List<OrderItemBean> findItemsByOrderIdInTx(Connection conn, int orderId) throws SQLException {
+        List<OrderItemBean> list = new ArrayList<>();
+        String sql = "SELECT i.*, p.image AS product_image FROM order_item i LEFT JOIN product p ON i.product_id = p.pid WHERE i.order_id = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, orderId);
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()) {
+            OrderItemBean item = new OrderItemBean();
+            item.setId(rs.getInt("id"));
+            item.setOrderId(rs.getInt("order_id"));
+            item.setProductId(rs.getInt("product_id"));
+            item.setProductName(rs.getString("product_name"));
+            item.setPrice(rs.getBigDecimal("price"));
+            item.setQuantity(rs.getInt("quantity"));
+            item.setProductImage(rs.getString("product_image"));
+            list.add(item);
+        }
+        rs.close();
+        pstmt.close();
+        return list;
+    }
+
+    /** 更新订单状态（后台发货/完成等通用操作） */
     public boolean updateStatus(int orderId, int status) {
         String sql = "UPDATE orders SET status = ? WHERE id = ?";
         Connection conn = null;
@@ -188,9 +310,9 @@ public class OrderDAO {
         }
     }
 
-    /**  生成唯一订单号，"CF"+ 当前毫秒时间戳 + 0~999随机数  */
+    /**  生成唯一订单号，"CF"+ 当前毫秒时间戳 + 4位随机数（降低并发下碰撞概率）  */
     public static String generateOrderNo() {
-        return "CF" + System.currentTimeMillis() + (int)(Math.random() * 1000);
+        return "CF" + System.currentTimeMillis() + String.format("%04d", (int)(Math.random() * 10000));
     }
 
     private OrderBean mapOrder(ResultSet rs) throws SQLException {  //把 ResultSet每行数据封装成 Order实体

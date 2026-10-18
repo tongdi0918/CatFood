@@ -55,7 +55,7 @@
         .banner {
             position: relative;
             height: 420px;
-            background: linear-gradient(135deg, #ff9a56 0%, #ff6a3d 100%);
+            background: linear-gradient(135deg, #ff9a56 0%, #7cf6a7 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -130,6 +130,7 @@
             box-shadow: 0 4px 14px rgba(0,0,0,0.06);
             line-height: 1.8;
             color: #555;
+            text-align: center;
         }
 
         /* 首页功能入口 */
@@ -187,83 +188,86 @@
              margin-top: 60px;
              font-size: 14px;
        }
-            </style>
-        </head>
-        <body>
-        <!-- 顶部导航 -->
-        <div class="top-nav">
-            <div class="logo">喵鲜<span>猫粮商城</span></div>
-            <%
-                UserBean loginUser = (UserBean)session.getAttribute("loginUser");
-            %>
-           <div class="nav-links">
-               <a href="index.jsp">首页</a>
-               <a href="product_list.jsp">全部商品</a>
-               <a href="userinfo.jsp">个人中心</a>
-               <%
-                   if(loginUser != null && "admin".equals(loginUser.getRole())){
-               %>
-                   <a href="adminUserList.jsp">管理员</a>
-               <%
-                   }
-               %>
-               <a href="UserLogoutServlet">退出登录</a>
-           </div>
-        </div>
-        <!-- 顶部横幅 -->
-        <div class="banner">
-            <div class="banner-content">
-                <h1>喵鲜猫粮商城</h1>
-                <p>专为猫咪准备的优质猫粮，科学配方，健康好粮</p>
-                <a href="product_list.jsp" class="btn-primary">进入商品商城</a>
-            </div>
-        </div>
-        <!-- 首页功能入口 -->
-        <div class="section">
-            <h2 class="section-title">商城入口</h2>
-            <div class="feature-grid">
-                <a href="product_list.jsp" class="feature-item">
-                    <div class="feature-icon">🛒</div>
-                    <h3>全部商品</h3>
-                    <p>浏览猫粮商品</p>
-                </a>
-                <a href="userinfo.jsp" class="feature-item">
-                    <div class="feature-icon">👤</div>
-                    <h3>个人中心</h3>
-                    <p>查看个人信息</p>
-                </a>
-                <a href="order_Servlet" class="feature-item">
-                    <div class="feature-icon">📦</div>
-                    <h3>我的订单</h3>
-                    <p>管理订单记录</p>
-                </a>
+    </style>
+</head>
+<body>
 
-                <%
-                    if(loginUser != null && "admin".equals(loginUser.getRole())){
-                %>
-                <a href="adminUserList.jsp" class="feature-item">
-                    <div class="feature-icon">⚙️</div>
-                    <h3>管理后台</h3>
-                    <p>管理用户与商品</p>
-                </a>
-                <%
-                    }
-                %>
-            </div>
+    <div class="top-nav">
+        <div class="logo">喵鲜<span>猫粮商城</span></div>
+        <%
+            UserBean loginUser = (UserBean)session.getAttribute("loginUser");
+        %>
+       <div class="nav-links">
+           <a href="index.jsp">首页</a>
+           <a href="ProductListServlet">全部商品</a>
+           <a href="userinfo.jsp">个人中心</a>
+           <%
+               if(loginUser != null && "admin".equals(loginUser.getRole())){
+           %>
+               <a href="adminUserList.jsp">管理员</a>
+           <%
+               }
+           %>
+           <a href="LogoutServlet">退出登录</a>
+       </div>
+    </div>
+
+    <div class="banner">
+        <div class="banner-content">
+            <p>专为<span class="logo">哈基米</span>准备的优质猫粮，科学配方，健康好粮</p>
+            <a href="ProductListServlet" class="btn-primary">进入猫粮商城</a>
         </div>
-        <!-- 商城介绍 -->
-        <div class="section">
-            <h2 class="section-title">商城介绍</h2>
-            <div class="intro-card">
-                <p>
-                    喵鲜猫粮商城是一个面向猫咪爱好者的猫粮购买平台，提供多种优质猫粮商品，支持用户注册、登录、浏览商品、下单购买和订单管理。
-                    管理员可以通过后台管理用户信息，维护商品数据，帮助商城稳定运行。我们致力于为每一只猫咪提供健康、安全、营养丰富的主食选择。
-                </p>
-            </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">功能模块</h2>
+        <div class="feature-grid">
+            <a href="ProductListServlet" class="feature-item">
+                <div class="feature-icon">🛒</div>
+                <h3>查看猫粮商品</h3>
+                <p>浏览猫粮商品</p>
+            </a>
+            <a href="userinfo.jsp" class="feature-item">
+                <div class="feature-icon">👤</div>
+                <h3>个人中心</h3>
+                <p>查看个人信息</p>
+            </a>
+            <a href="orders?action=list" class="feature-item">
+                <div class="feature-icon">📦</div>
+                <h3>我的订单</h3>
+                <p>管理订单记录</p>
+            </a>
+
+            <%
+                if(loginUser != null && "admin".equals(loginUser.getRole())){
+            %>
+            <a href="adminUserList.jsp" class="feature-item">
+                <div class="feature-icon">⚙️</div>
+                <h3>用户管理</h3>
+                <p>管理用户信息</p>
+            </a>
+            <a href="AdminOrderServlet?action=list" class="feature-item">
+                <div class="feature-icon">📋</div>
+                <h3>订单管理</h3>
+                <p>发货与订单处理</p>
+            </a>
+            <%
+                }
+            %>
         </div>
-        <!-- 底部信息 -->
-        <footer>
-            &copy; 2026 喵鲜猫粮商城 | 小猫的每一口，都值得认真选择|第三小组课程项目
-        </footer>
-        </body>
-        </html>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">商城介绍</h2>
+        <div class="intro-card">
+            <p>喵鲜猫粮商城是一个面向猫咪爱好者的猫粮购买平台，提供多种优质猫粮商品</p>
+            <p>支持用户注册、登录、浏览商品、下单购买和订单管理。</p>
+            <p>我们致力于为每一只猫咪提供健康、安全、营养丰富的主食选择。</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 202610喵鲜猫粮商城of第三小组课程项目</p>
+    </footer>
+    </body>
+    </html>
