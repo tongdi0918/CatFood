@@ -37,6 +37,22 @@
         tr.querySelector('.qty-subtotal').textContent = '¥ ' + fmt(price * qty);
     }
 
+    // 根据选中的商品重新计算总价（前端展示用，最终金额以后端结算为准）
+    function updateTotal() {
+        var total = 0;
+        document.querySelectorAll('.cart-item-check').forEach(function (ck) {
+            if (!ck.checked) return;
+            var tr = ck.closest('tr');
+            var price = parseFloat(tr.getAttribute('data-price'));
+            var qty = parseQuantity(tr.querySelector('.qty-value').value);
+            if (!isNaN(price) && qty !== null) {
+                total += price * qty;
+            }
+        });
+        var totalEl = document.getElementById('cart-total');
+        if (totalEl) totalEl.textContent = '¥ ' + fmt(total);
+    }
+
     function updateQuantity(tr, pid, quantity) {
         if (submitting) return;   // 避免重复提交
         if (quantity < 1) return; // 非法数量，不发起请求
@@ -56,7 +72,7 @@
                 if (data.code === 0) {
                     tr.querySelector('.qty-value').value = data.quantity;
                     updateSubtotal(tr);
-                    document.getElementById('cart-total').textContent = '¥ ' + fmt(data.total);
+                    updateTotal();
                     showFeedback('数量已更新');
                 } else {
                     // 展示服务端错误信息；数量保持不变（即恢复原数量）
@@ -86,7 +102,7 @@
                     if (remaining === 0) {
                         location.reload(); // 空购物车 → 重新渲染服务端空态
                     } else {
-                        document.getElementById('cart-total').textContent = '¥ ' + fmt(data.total);
+                        updateTotal();
                     }
                 } else {
                     // 失败：保留原行并提示错误
@@ -165,6 +181,7 @@
             itemChecks.forEach(function (ck) {
                 ck.checked = selectAll.checked;
             });
+            updateTotal();
         });
         itemChecks.forEach(function (ck) {
             ck.addEventListener('change', function () {
@@ -173,6 +190,7 @@
                     if (!c.checked) allChecked = false;
                 });
                 selectAll.checked = allChecked;
+                updateTotal();
             });
         });
     }
