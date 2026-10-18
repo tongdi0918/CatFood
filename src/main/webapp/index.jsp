@@ -198,7 +198,7 @@
             %>
            <div class="nav-links">
                <a href="index.jsp">首页</a>
-               <a href="productList.jsp">全部商品</a>
+               <a href="product_list.jsp">全部商品</a>
                <a href="userinfo.jsp">个人中心</a>
                <%
                    if(loginUser != null && "admin".equals(loginUser.getRole())){
@@ -222,7 +222,7 @@
         <div class="section">
             <h2 class="section-title">商城入口</h2>
             <div class="feature-grid">
-                <a href="productList.jsp" class="feature-item">
+                <a href="product_list.jsp" class="feature-item">
                     <div class="feature-icon">🛒</div>
                     <h3>全部商品</h3>
                     <p>浏览猫粮商品</p>

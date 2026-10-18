@@ -45,16 +45,17 @@ INSERT INTO product(pid,pname,price,category,stock,image,description,status) VAL
 SET FOREIGN_KEY_CHECKS = 1;
 
 
-
+USE `catshop`;
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
     `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户ID',
     `username`    VARCHAR(50)  NOT NULL COMMENT '用户名',
     `password`    VARCHAR(100) NOT NULL COMMENT '密码',
+    `name`    VARCHAR(50)  NULL COMMENT '姓名',
     `email`       VARCHAR(100) DEFAULT NULL COMMENT '邮箱',
     `phone`       VARCHAR(20)  DEFAULT NULL COMMENT '手机号',
     `address`     VARCHAR(255) DEFAULT NULL COMMENT '收货地址',
-    `role`        TINYINT      NOT NULL DEFAULT 0 COMMENT '角色：0-普通用户，1-管理员',
+    `role`        VARCHAR(20)  NOT NULL DEFAULT 'user' COMMENT '普通用户or管理员',
     `create_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_username` (`username`)
@@ -62,7 +63,7 @@ CREATE TABLE `user` (
 
 USE `catshop`;
 INSERT INTO `user` (`username`, `password`, `phone`, `address`,`role`) VALUES
-    ('admin', '123456', '13800138000', '四川省宜宾市四川轻化工大学',1);
+    ('admin', '123456', '13800138000', '四川省宜宾市四川轻化工大学','admin');
 
 
 
