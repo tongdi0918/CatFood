@@ -80,7 +80,8 @@ public class CartServlet extends HttpServlet {
             return;
         }
 
-        // 默认操作：查看购物车，放入 request 后转发到 cart.jsp
+        // 默认操作：查看购物车前刷新最新库存，放入 request 后转发到 cart.jsp
+        refreshCartStock(cart);
         request.setAttribute("cart", cart);
         request.setAttribute("totalAmount", calcTotal(cart));
         request.getRequestDispatcher("/cart.jsp").forward(request, response);
@@ -373,6 +374,17 @@ public class CartServlet extends HttpServlet {
             }
         } finally {
             session.removeAttribute("orderSubmitting");
+        }
+    }
+
+    /** 查看购物车时刷新每件商品的最新库存（快照库存可能过期） */
+    private void refreshCartStock(List<CartItem> cart) {
+        ProductDAO productDAO = new ProductDAO();
+        for (CartItem item : cart) {
+            Product p = productDAO.findById(item.getProduct().getPid());
+            if (p != null && p.getStock() != null) {
+                item.getProduct().setStock(p.getStock());
+            }
         }
     }
 
