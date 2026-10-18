@@ -69,8 +69,8 @@
                 response.sendRedirect("login.jsp");
                 return;
             }
-            String name = user.getName() == null ? "" : user.getName();
-            String phone = user.getPhone() == null ? "" : user.getPhone();
+//            String name = user.getName();
+//            String phone = user.getPhone();
         %>
         <form action="UpdateUserInfoServlet" method="post">
             <div class="item">
@@ -79,11 +79,11 @@
             </div>
             <div class="item">
                 姓名：
-                <input type="text" name="name" value="<%=name%>">
+                <input type="text" name="name" value="<%=user.getName()%>">
             </div>
             <div class="item">
                 手机号：
-                <input type="text" name="phone" value="<%=phone%>">
+                <input type="text" name="phone" value="<%=user.getPhone()%>">
             </div>
             <button type="submit">保存修改</button>
         </form>

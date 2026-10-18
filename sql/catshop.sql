@@ -45,12 +45,13 @@ INSERT INTO product(pid,pname,price,category,stock,image,description,status) VAL
 SET FOREIGN_KEY_CHECKS = 1;
 
 
-
+USE `catshop`;
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
     `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户ID',
     `username`    VARCHAR(50)  NOT NULL COMMENT '用户名',
     `password`    VARCHAR(100) NOT NULL COMMENT '密码',
+    `name`    VARCHAR(50)  NULL COMMENT '姓名',
     `email`       VARCHAR(100) DEFAULT NULL COMMENT '邮箱',
     `phone`       VARCHAR(20)  DEFAULT NULL COMMENT '手机号',
     `address`     VARCHAR(255) DEFAULT NULL COMMENT '收货地址',
