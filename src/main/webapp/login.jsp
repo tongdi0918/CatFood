@@ -90,7 +90,25 @@
     </style>
 </head>
 <body>
+<div >
+    <%
+        String msg=request.getParameter("registermsg");
+        if("success".equals(msg) ){
+    %>
+    <script>alert("注册成功，请登录");</script>
+    <%
+        }
+    %>
 
+    <%
+        String loginmsg=request.getParameter("loginmsg");
+        if("loginfail".equals(loginmsg) ){
+    %>
+    <script>alert("登录失败，请重新来过~");</script>
+    <%
+        }
+    %>
+</div>
 <div class="container">
     <h3>用户登录</h3>
 
@@ -99,12 +117,10 @@
             账号：
             <input type="text" name="username" placeholder="请输入账号">
         </p>
-
         <p>
             密码：
             <input type="password" name="password" placeholder="请输入密码">
         </p>
-
         <p>
             <input type="submit" class="btn-login" value="登录">
         </p>

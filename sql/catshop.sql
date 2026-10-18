@@ -54,7 +54,7 @@ CREATE TABLE `user` (
     `email`       VARCHAR(100) DEFAULT NULL COMMENT '邮箱',
     `phone`       VARCHAR(20)  DEFAULT NULL COMMENT '手机号',
     `address`     VARCHAR(255) DEFAULT NULL COMMENT '收货地址',
-    `role`        TINYINT      NOT NULL DEFAULT 0 COMMENT '角色：0-普通用户，1-管理员',
+    `role`        VARCHAR(20)  NOT NULL DEFAULT 'user' COMMENT '普通用户or管理员',
     `create_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_username` (`username`)
@@ -62,7 +62,7 @@ CREATE TABLE `user` (
 
 USE `catshop`;
 INSERT INTO `user` (`username`, `password`, `phone`, `address`,`role`) VALUES
-    ('admin', '123456', '13800138000', '四川省宜宾市四川轻化工大学',1);
+    ('admin', '123456', '13800138000', '四川省宜宾市四川轻化工大学','admin');
 
 
 

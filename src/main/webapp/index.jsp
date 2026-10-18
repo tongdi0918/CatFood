@@ -53,6 +53,16 @@
     </style>
 </head>
 <body>
+<p>
+<%
+    String loginmsg=request.getParameter("loginmsg");
+    if("loginsuccess".equals(loginmsg) ){
+%>
+<script>alert("登录成功~")</script>
+<%
+    }
+%>
+</p>
 <nav>
     <strong class="logo">喵鲜猫粮商城</strong>
     <div class="nav-links">

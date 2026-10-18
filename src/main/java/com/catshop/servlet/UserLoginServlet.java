@@ -2,12 +2,12 @@ package com.catshop.servlet;
 
 import com.catshop.dao.UserDAO;
 import com.catshop.javabean.UserBean;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/UserLoginServlet")
@@ -23,9 +23,9 @@ public class UserLoginServlet extends HttpServlet {
         if(user != null){
             HttpSession session = request.getSession();
             session.setAttribute("loginUser",user);
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("index.jsp?loginmsg=loginsuccess");
         }else{
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("login.jsp?loginmsg=loginfail");
         }
     }
 

@@ -90,7 +90,16 @@
     </style>
 </head>
 <body>
-
+<div >
+    <%
+        String msg=request.getParameter("registermsg");
+        if("fail".equals(msg) ){
+    %>
+    <script>alert("注册失败，请重新来过~")</script>
+    <%
+        }
+    %>
+</div>
 <div class="container">
     <h3>用户注册</h3>
 
