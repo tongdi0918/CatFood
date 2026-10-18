@@ -172,6 +172,7 @@
                 if (data === null) return;
                 if (data.code === 0) {
                     alert('已加入购物车');
+                    window.refreshCartCount && window.refreshCartCount();
                 } else {
                     alert(data.msg || '加入失败');
                 }
@@ -182,5 +183,21 @@
             .then(function () {
                 submitting = false;
             });
+    };
+
+    // 导航角标：查询购物车商品种类数并更新
+    window.refreshCartCount = function () {
+        var badge = document.getElementById('cart-count');
+        if (!badge) return;
+        fetch(ctx + '/cart?action=count', { method: 'POST' })
+            .then(function (resp) { return resp.json(); })
+            .then(function (data) {
+                if (data.code === 0) {
+                    var n = data.count || 0;
+                    badge.textContent = n > 0 ? n : '';
+                    badge.style.display = n > 0 ? 'inline-block' : 'none';
+                }
+            })
+            .catch(function () { /* 查询失败忽略，保持角标原样 */ });
     };
 })();

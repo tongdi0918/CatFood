@@ -50,6 +50,12 @@ public class CartServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
+        // 查询购物车商品种类数（AJAX，用于导航角标）
+        if ("count".equals(action)) {
+            writeJson(response, "{\"code\":0,\"count\":" + cart.size() + "}");
+            return;
+        }
+
         // 加入购物车（AJAX）
         if ("add".equals(action)) {
             addToCart(request, response, cart);
