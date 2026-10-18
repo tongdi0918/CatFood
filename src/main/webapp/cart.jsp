@@ -88,7 +88,7 @@
                         </p>
                         <p>
                             <label>联系电话：</label>
-                            <input type="text" name="phone" value="${phone}" required>
+                            <input type="text" name="phone" value="${phone}" maxlength="11" placeholder="请输入11位手机号" required>
                         </p>
                         <p>
                             <label>收货地址：</label>

@@ -300,6 +300,14 @@ public class CartServlet extends HttpServlet {
             return;
         }
 
+        // 手机号基础格式校验（11 位数字）
+        if (!isValidPhone(phone)) {
+            echoForm(request, receiver, phone, address);
+            request.setAttribute("error", "联系电话格式不正确，请输入 11 位手机号");
+            request.getRequestDispatcher("/cart.jsp").forward(request, response);
+            return;
+        }
+
         // 会话级防重复下单（尽力而为；真正的幂等需数据库约束，超出购物车范围）
         if (session.getAttribute("orderSubmitting") != null) {
             echoForm(request, receiver, phone, address);
@@ -416,6 +424,19 @@ public class CartServlet extends HttpServlet {
     /** 去掉首尾空白，空串返回 null */
     private String trimToNull(String s) {
         return (s == null || s.trim().isEmpty()) ? null : s.trim();
+    }
+
+    /** 校验手机号是否为 11 位数字 */
+    private boolean isValidPhone(String phone) {
+        if (phone == null || phone.length() != 11) {
+            return false;
+        }
+        for (int i = 0; i < phone.length(); i++) {
+            if (!Character.isDigit(phone.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** 结算表单回显 */
