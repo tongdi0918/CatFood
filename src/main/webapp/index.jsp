@@ -12,14 +12,14 @@
 
         body {
             font-family: "Microsoft Yahei", "PingFang SC", sans-serif;
-            background: #f7f9fc;
+            background: rgb(237 163 51 / 0.15);
             color: #333;
         }
 
         /* 顶部导航 */
         .top-nav {
             height: 70px;
-            background: #ffffff;
+            background: rgb(237 163 51 / 0.15);
             border-bottom: 1px solid #eaeaea;
             display: flex;
             align-items: center;
@@ -55,7 +55,6 @@
         .banner {
             position: relative;
             height: 420px;
-            background: linear-gradient(135deg, #ff9a56 0%, #7cf6a7 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -89,11 +88,19 @@
             margin-bottom: 30px;
             opacity: 0.95;
         }
-
+        .banner-img{
+            width: 100%;
+            height: auto;
+            display: block;
+        }
         .btn-primary {
+            position: absolute;
+            left: 40%;
+            transform: translateX(-50%);
+            top: 55%;
             display: inline-block;
             padding: 14px 36px;
-            background: #fff;
+            background: #eda6a6;
             color: #ff6a3d;
             text-decoration: none;
             border-radius: 30px;
@@ -103,7 +110,7 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
+            /*transform: translateY(-3px);*/
             box-shadow: 0 12px 24px rgba(0,0,0,0.18);
         }
 
@@ -112,6 +119,7 @@
             max-width: 1100px;
             margin: 50px auto;
             padding: 0 30px;
+
         }
 
         .section-title {
@@ -188,6 +196,8 @@
              margin-top: 60px;
              font-size: 14px;
        }
+
+
     </style>
 </head>
 <body>
@@ -214,8 +224,10 @@
 
     <div class="banner">
         <div class="banner-content">
-            <p>专为<span class="logo">哈基米</span>准备的优质猫粮，科学配方，健康好粮</p>
+            <img src="images/哈基米猫粮温馨时光.png" class="banner-img">
+<%--            <p>专为<span class="logo">哈基米</span>准备的优质猫粮，科学配方，健康好粮</p>--%>
             <a href="ProductListServlet" class="btn-primary">进入猫粮商城</a>
+
         </div>
     </div>
 

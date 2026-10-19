@@ -8,13 +8,13 @@
 <head>
     <meta charset="UTF-8">
     <title>下单成功_喵鲜猫粮商城</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/order_list.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cart.css">
 </head>
 <body>
 
 <nav>
     <strong class="logo">喵鲜猫粮商城</strong>
-    <div class="top-nav">
+    <div class="nav-links">
         <a href="${pageContext.request.contextPath}/index.jsp">首页</a>
         <a href="${pageContext.request.contextPath}/ProductListServlet">全部商品</a>
         <a href="${pageContext.request.contextPath}/cart">购物车</a>
@@ -33,10 +33,10 @@
             <p>订单金额：<strong><fmt:formatNumber value="${sessionScope.lastOrderAmount}" pattern="0.00"/>RMB</strong></p>
         </div>
     </c:if>
-    <p>您的订单已提交成功，感谢购买！</p>
+    <p class="order-success-tip">您的订单已提交成功，感谢购买！</p>
     <p style="margin-top:14px;">
-        <a href="${pageContext.request.contextPath}/orders?action=list" style="margin-right:16px;">查看我的订单</a>
-        <a href="${pageContext.request.contextPath}/ProductListServlet">继续购物</a>
+        <a href="${pageContext.request.contextPath}/orders?action=list" class="continue-shopping">查看我的订单</a>
+        <a href="${pageContext.request.contextPath}/ProductListServlet" class="continue-shopping">继续购物</a>
     </p>
 </main>
 
